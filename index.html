@@ -18,7 +18,7 @@
 <meta property="og:url" content="https://sowloynab.de/">
 <meta property="og:title" content="Social Media Agentur für Gastronomie in Münster | Sow & Loynab Media">
 <meta property="og:description" content="Volle Tische durch TikTok & Instagram: Über 2 Mio. Views für unsere Kunden, Dreh bei dir vor Ort. Von Fassie & Lion — zwei Creator aus Münster. Plätze limitiert.">
-<meta property="og:image" content="https://sowloynab.de/og-image.jpg">
+<meta property="og:image" content="https://sowloynab.de/nebeneinander.jpg">
 <meta property="og:locale" content="de_DE">
 <meta property="og:site_name" content="Sow & Loynab Media">
 
@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Social Media Agentur für Gastronomie in Münster | Sow & Loynab Media">
 <meta name="twitter:description" content="Volle Tische durch TikTok & Instagram: Über 2 Mio. Views für unsere Kunden. Plätze limitiert — Warteliste offen.">
-<meta name="twitter:image" content="https://sowloynab.de/og-image.jpg">
+<meta name="twitter:image" content="https://sowloynab.de/nebeneinander.jpg">
 
 <!-- Schema Markup -->
 <script type="application/ld+json">
@@ -39,7 +39,7 @@
   "slogan": "Volle Tische. Jeden Abend.",
   "url": "https://sowloynab.de/",
   "email": "hallo@sowloynab.de",
-  "image": "https://sowloynab.de/og-image.jpg",
+  "image": "https://sowloynab.de/nebeneinander.jpg",
   "priceRange": "€€€",
   "address": {
     "@type": "PostalAddress",
@@ -2365,7 +2365,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
 (function(){
   var canvas = document.getElementById('hero-canvas');
   var hero = document.getElementById('hero');
-  if (!canvas || !hero || prefersReduced) return;
+  if (!canvas || !hero || prefersReduced || window.matchMedia('(hover: none)').matches) return;
   var ctx = canvas.getContext('2d');
   var w, h, raf, running = false;
   var blobs = [
