@@ -404,7 +404,7 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .phone-sound svg { width: 16px; height: 16px; }
 .phone-ui { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding: 8px 10px 6px; background: linear-gradient(to bottom, rgba(0,0,0,.65) 0%, transparent 100%); display: flex; align-items: center; justify-content: space-between; }
 .ph-av { width: 26px; height: 26px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 700; color: #fff; flex-shrink: 0; }
-.ph-handle { font-size: 0.55rem; font-weight: 600; color: rgba(255,255,255,.9); }
+.ph-handle { font-size: 0.55rem; font-weight: 600; color: rgba(255,255,255,.9); text-decoration: none; }
 .ph-follow { background: var(--gold); color: #fff; font-size: 0.48rem; font-weight: 700; padding: 2px 7px; border-radius: 100px; }
 .phone-badge { position: absolute; top: -14px; right: -16px; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-l) 100%); color: #fff; font-size: 0.58rem; font-weight: 700; padding: 5px 12px; border-radius: 100px; box-shadow: 0 4px 16px rgba(224,82,26,.55); white-space: nowrap; z-index: 5; }
 /* Float cards */
@@ -491,6 +491,8 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .founder-body { padding: 1.1rem 1.3rem 1.2rem; display: flex; flex-direction: column; justify-content: center; }
 .founder-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.08rem; font-weight: 700; color: #f5efe4; margin-bottom: .15rem; }
 .founder-handle { font-size: .7rem; color: var(--gold-l); letter-spacing: .05em; margin-bottom: .5rem; opacity: .85; }
+.founder-handle a { color: inherit; text-decoration: none; transition: opacity .2s; }
+.founder-handle a:hover { text-decoration: underline; opacity: .75; }
 .founder-bio { font-size: .84rem; color: rgba(245,239,228,.65); line-height: 1.6; }
 .about-stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(255,255,255,.05); border-radius: 18px; overflow: hidden; margin-top: 2rem; border: 1px solid rgba(255,255,255,.06); }
 .about-stat { background: rgba(22,14,10,.6); padding: 1.5rem 1rem; text-align: center; }
@@ -1060,7 +1062,7 @@ section[id], #hero { scroll-margin-top: 90px; }
           <div class="phone-ui">
             <div style="display:flex;align-items:center;gap:6px;">
               <div class="ph-av">S&L</div>
-              <span class="ph-handle">sowloynab</span>
+              <a href="https://www.instagram.com/sowloynab" target="_blank" rel="noopener" class="ph-handle">sowloynab</a>
             </div>
             <div class="ph-follow">Folgen</div>
           </div>
@@ -1519,7 +1521,7 @@ section[id], #hero { scroll-margin-top: 90px; }
         </div>
         <div class="founder-body">
           <div class="founder-name">Fassie Loynab</div>
-          <div class="founder-handle">@loynab_marketing</div>
+          <div class="founder-handle"><a href="https://www.instagram.com/fassielo" target="_blank" rel="noopener">@fassielo</a> · <a href="https://www.tiktok.com/@fassielo" target="_blank" rel="noopener">TikTok</a></div>
           <div class="founder-bio">Ich bin der Stratege von uns beiden. Was auf TikTok funktioniert, weiß ich nicht aus Kursen — sondern weil ich's mit meinem eigenen Kanal bewiesen hab.</div>
         </div>
       </div>
@@ -1530,7 +1532,7 @@ section[id], #hero { scroll-margin-top: 90px; }
         </div>
         <div class="founder-body">
           <div class="founder-name">Lion Sow</div>
-          <div class="founder-handle">@homemeal99</div>
+          <div class="founder-handle"><a href="https://www.instagram.com/homemeal99" target="_blank" rel="noopener">@homemeal99</a> · <a href="https://www.tiktok.com/@homemeal99" target="_blank" rel="noopener">TikTok</a></div>
           <div class="founder-bio">Ich bin das Auge. Dreh, Schnitt, Look — wenn dir eins unserer Videos im Kopf bleibt, war ich das.</div>
         </div>
       </div>
