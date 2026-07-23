@@ -292,7 +292,9 @@ nav.nav-light { background: #100b09; border-bottom-color: rgba(224,82,26,.22); t
 .logo:hover .logo-mark { transform: rotate(-5deg) scale(1.06); }
 @media (max-width: 700px) {
   .announce-bar { display: none; }
-  nav { position: static; padding: 0.55rem 1.1rem; }
+  nav { position: static; padding: 0.7rem 1.1rem; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: none; }
+  .logo { display: none; }
+  .nav-menu-btn { display: flex; }
 }
 .logo:hover .logo-mark::after { left: 130%; }
 .logo-text { font-family: 'Space Grotesk', sans-serif; font-size: .95rem; font-weight: 700; color: #f0e8d8; white-space: nowrap; transition: color .35s; }
@@ -302,6 +304,7 @@ nav.nav-light { background: #100b09; border-bottom-color: rgba(224,82,26,.22); t
 .cmdk-trigger:hover { border-color: rgba(224,82,26,.4); color: var(--gold-l); }
 .cmdk-trigger kbd { font-size: .65rem; font-family: 'Inter', sans-serif; }
 @media (min-width: 900px) { .cmdk-trigger { display: none; } }
+.nav-menu-btn { display: none; align-items: center; justify-content: center; width: 42px; height: 42px; margin-left: -0.4rem; background: none; border: none; color: #f0e8d8; cursor: pointer; padding: 0; }
 .nav-links { display: none; list-style: none; gap: 2.2rem; }
 .nav-links a { font-size: .8rem; font-weight: 500; color: rgba(245,239,228,.45); text-decoration: none; transition: color .2s; position: relative; padding-bottom: 2px; letter-spacing: .01em; }
 .nav-links a::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 1px; background: var(--gold-l); transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
@@ -1001,6 +1004,9 @@ section[id], #hero { scroll-margin-top: 90px; }
 
 <!-- NAV -->
 <nav>
+  <button type="button" class="nav-menu-btn" id="nav-menu-btn" aria-label="Menü öffnen">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
   <a href="#" class="logo">
     <span class="logo-mark">S&L</span>
     <span class="logo-text">Sow <em>&</em> Loynab Media</span>
@@ -2269,6 +2275,8 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
   var trigger = document.getElementById('cmdk-trigger');
   if (trigger) trigger.addEventListener('click', open);
+  var navMenuBtn = document.getElementById('nav-menu-btn');
+  if (navMenuBtn) navMenuBtn.addEventListener('click', open);
 })();
 
 /* Pain: gestaffeltes "Erkennst du dich wieder?"-Abhaken */
