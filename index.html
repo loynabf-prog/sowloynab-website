@@ -435,20 +435,6 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cp-views { font-size: .5rem; color: rgba(255,255,255,.6); margin-top: 3px; }
 .cp-hint { position: absolute; bottom: 7px; left: 0; right: 0; z-index: 5; text-align: center; font-size: .48rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.5); pointer-events: none; transition: opacity .4s; }
 .cp-hint.hide { opacity: 0; }
-.cp-cta { display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, #1a1006, #0d0908); cursor: pointer; }
-.cp-cta-inner { text-align: center; padding: 0 20px; }
-.cp-cta-h { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff; font-size: 1.05rem; margin-bottom: 7px; }
-.cp-cta-t { font-size: .62rem; color: rgba(245,239,228,.6); line-height: 1.5; margin-bottom: 15px; }
-.cp-cta .btn { font-size: .72rem; padding: .55rem 1.15rem; }
-/* ── Vorschau-Sektion ── */
-#contentphone { background: linear-gradient(180deg, #0d0908 0%, #140d0a 55%, #0d0908 100%); position: relative; overflow: hidden; }
-#contentphone h2 { color: #f5efe4; }
-#contentphone .sub { color: rgba(245,239,228,.6); }
-.cpv-stage { display: flex; flex-direction: column; align-items: center; gap: 1.75rem; margin-top: 2.75rem; }
-.phone.cpv-phone { width: min(300px, 80vw); transform: rotate(0deg); }
-.phone.cpv-phone:hover { transform: rotate(0deg); }
-.cpv-actions { display: flex; flex-direction: column; align-items: center; gap: .65rem; }
-.cpv-hint { font-size: .7rem; color: rgba(245,239,228,.42); }
 /* ── Vollbild Content Phone ── */
 .cpx { position: fixed; inset: 0; z-index: 3000; background: rgba(8,6,5,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 58px 12px 18px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .35s ease, visibility .35s ease; }
 .cpx.open { opacity: 1; visibility: visible; pointer-events: auto; }
@@ -2452,103 +2438,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   bar.addEventListener('pointercancel', function(){ dragging = false; });
 })();
 
-/* ── CONTENT PHONE (Prototyp: TikTok-artiger Feed) ── */
-(function(){
-  var feed = document.getElementById('cp-feed');
-  var tabsEl = document.getElementById('cp-tabs');
-  var hint = document.getElementById('cp-hint');
-  if (!feed || !tabsEl) return;
-
-  var PLACEHOLDER = 'hero.mp4'; /* Prototyp — später echte Video-URLs pro Clip */
-  var companies = [
-    { name: 'BelChicken', handle: 'belchicken', videos: [
-      { cap: '30%-Aktion 🔥 Schlange bis auf die Straße', likes: '12.4k', views: '574k Views', comments: '312' },
-      { cap: 'POV: der beste Chicken-Spot am HBF', likes: '8.1k', views: '210k Views', comments: '144' },
-      { cap: 'Von 43 auf über 20.000 Follower', likes: '5.6k', views: '98k Views', comments: '87' }
-    ]},
-    { name: 'Schleckofatz', handle: 'schleckofatz', videos: [
-      { cap: 'Neueröffnung — Tag 1 🍦', likes: '4.2k', views: '88k Views', comments: '61' },
-      { cap: 'Reality-Format · Folge 1', likes: '3.3k', views: '44k Views', comments: '52' },
-      { cap: 'Bowls & Eis unter einem Dach', likes: '2.1k', views: '31k Views', comments: '29' }
-    ]},
-    { name: 'sowloynab', handle: 'sowloynab', videos: [
-      { cap: 'So drehen wir bei euch vor Ort', likes: '9.9k', views: '320k Views', comments: '201' },
-      { cap: 'Behind the Scenes 🎬', likes: '6.7k', views: '150k Views', comments: '133' }
-    ]}
-  ];
-
-  var HEART = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
-  var COMMENT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z"/></svg>';
-  var SHARE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4L22 2z"/></svg>';
-  var PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"/></svg>';
-
-  var active = 0, io = null;
-
-  function slideHTML(v, c){
-    return '<div class="cp-slide paused">'
-      + '<video muted loop playsinline preload="none"><source src="' + PLACEHOLDER + '" type="video/mp4"></video>'
-      + '<div class="cp-grad"></div>'
-      + '<div class="cp-play">' + PLAY + '</div>'
-      + '<div class="cp-rail">'
-        + '<div class="cp-act">' + HEART + '<span>' + v.likes + '</span></div>'
-        + '<div class="cp-act">' + COMMENT + '<span>' + v.comments + '</span></div>'
-        + '<div class="cp-act">' + SHARE + '<span>Teilen</span></div>'
-      + '</div>'
-      + '<div class="cp-meta"><div class="cp-handle">@' + c.handle + '</div><div class="cp-cap">' + v.cap + '</div><div class="cp-views">' + v.views + '</div></div>'
-      + '</div>';
-  }
-
-  function buildTabs(){
-    tabsEl.innerHTML = companies.map(function(c, i){
-      return '<button type="button" class="cp-tab' + (i === active ? ' active' : '') + '" data-i="' + i + '">' + c.name + '</button>';
-    }).join('');
-  }
-
-  function setupIO(){
-    if (io) io.disconnect();
-    io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        var slide = e.target, vid = slide.querySelector('video');
-        if (!vid) return;
-        if (e.isIntersecting && e.intersectionRatio >= 0.6){
-          var p = vid.play(); if (p && p.catch) p.catch(function(){});
-          slide.classList.remove('paused');
-        } else {
-          vid.pause();
-        }
-      });
-    }, { root: feed, threshold: [0, 0.6, 1] });
-    [].forEach.call(feed.querySelectorAll('.cp-slide'), function(s){ io.observe(s); });
-  }
-
-  function renderCompany(i){
-    active = i;
-    var c = companies[i];
-    feed.innerHTML = c.videos.map(function(v){ return slideHTML(v, c); }).join('');
-    feed.scrollTop = 0;
-    buildTabs();
-    setupIO();
-    [].forEach.call(feed.querySelectorAll('.cp-slide'), function(slide){
-      slide.addEventListener('click', function(){
-        var vid = slide.querySelector('video'); if (!vid) return;
-        if (vid.paused){ var p = vid.play(); if (p && p.catch) p.catch(function(){}); slide.classList.remove('paused'); }
-        else { vid.pause(); slide.classList.add('paused'); }
-      });
-    });
-  }
-
-  tabsEl.addEventListener('click', function(e){
-    var t = e.target.closest('.cp-tab'); if (!t) return;
-    renderCompany(+t.dataset.i);
-    if (hint) hint.classList.remove('hide');
-  });
-
-  feed.addEventListener('scroll', function(){ if (hint) hint.classList.add('hide'); }, { passive: true });
-
-  renderCompany(0);
-})();
-
-/* ── CONTENT PHONE APP: Vorschau + Vollbild (Prototyp) ── */
+/* ── CONTENT PHONE APP: Vollbild (Prototyp) ── */
 (function(){
   /* EINE Datenquelle — später einfach erweitern oder aus JSON laden.
      src: Platzhalter (hero.mp4). Für echte Videos hier die HLS/MP4-URL + poster eintragen. */
@@ -2690,50 +2580,6 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   if (cpxClose) cpxClose.addEventListener('click', closeApp);
   if (cpx) cpx.addEventListener('click', function(e){ if (e.target === cpx) closeApp(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && cpx && cpx.classList.contains('open')) closeApp(); });
-
-  /* ---------- VORSCHAU (3 Top-Videos, öffnet App bei Tab/CTA/Scroll-Ende) ---------- */
-  var pFeed = document.getElementById('cpv-feed');
-  var pTabs = document.getElementById('cpv-tabs');
-  var pHint = document.getElementById('cpv-scrollhint');
-  if (pFeed){
-    var top = CP_DATA[0];
-    pFeed.innerHTML = top.videos.slice(0, 3).map(function(v){ return slide(v, top); }).join('')
-      + '<div class="cp-slide cp-cta"><div class="cp-cta-inner"><div class="cp-cta-h">Willst du mehr sehen?</div>'
-      + '<div class="cp-cta-t">Öffne das Content Phone — alle Kunden, alle Videos, in Vollbild.</div>'
-      + '<button type="button" class="btn btn-gold-lg" id="cpv-cta-btn">Content Phone öffnen</button></div></div>';
-    previewFeed = makeFeed(pFeed);
-
-    pTabs.innerHTML = CP_DATA.map(function(c, i){
-      return '<button type="button" class="cp-tab' + (i === 0 ? ' active' : '') + '" data-i="' + i + '">' + c.name + '</button>';
-    }).join('');
-    pTabs.addEventListener('click', function(e){ var t = e.target.closest('.cp-tab'); if (!t) return; openApp(+t.dataset.i); });
-
-    pFeed.addEventListener('click', function(e){ if (e.target.closest('#cpv-cta-btn') || e.target.closest('.cp-cta')) openApp(0); });
-    pFeed.addEventListener('scroll', function(){ if (pHint) pHint.classList.add('hide'); }, { passive: true });
-
-    /* nur abspielen, wenn die Sektion sichtbar ist (spart Ressourcen) */
-    var section = document.getElementById('contentphone');
-    if (section && 'IntersectionObserver' in window){
-      new IntersectionObserver(function(es){
-        es.forEach(function(e){ if (e.isIntersecting) previewFeed.connect(); else previewFeed.disconnect(); });
-      }, { threshold: 0.35 }).observe(section);
-    } else { previewFeed.connect(); }
-
-    /* Weiterscrollen über die Vorschau hinaus (CTA-Slide erreicht) → App öffnen */
-    var ctaSlide = pFeed.querySelector('.cp-cta');
-    if (ctaSlide && 'IntersectionObserver' in window){
-      var t = null;
-      new IntersectionObserver(function(es){
-        es.forEach(function(e){
-          if (e.isIntersecting && e.intersectionRatio >= 0.9){ t = setTimeout(function(){ if (!cpx.classList.contains('open')) openApp(0); }, 480); }
-          else if (t){ clearTimeout(t); t = null; }
-        });
-      }, { root: pFeed, threshold: [0, 0.9, 1] }).observe(ctaSlide);
-    }
-  }
-
-  var openBtn = document.getElementById('cpv-open');
-  if (openBtn) openBtn.addEventListener('click', function(){ openApp(0); });
 
   /* Global angepinnter Button — von überall */
   var fab = document.getElementById('cp-fab');
