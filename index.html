@@ -537,6 +537,11 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 
 /* ÜBER UNS */
 #about { background: linear-gradient(170deg, #100b09 0%, #211208 60%, #0d0908 100%); position: relative; overflow: hidden; border: none; }
+.about-story { max-width: 640px; margin: 3.5rem auto 0; text-align: left; position: relative; z-index: 1; }
+.about-story-kicker { display: inline-block; font-family: 'Space Grotesk', sans-serif; font-size: .7rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-l); margin-bottom: 1rem; }
+.about-story p { color: rgba(245,239,228,.75); font-size: 1rem; line-height: 1.85; margin-bottom: 1.1rem; }
+.about-story p:last-child { margin-bottom: 0; }
+.about-story em { color: #f5efe4; font-style: normal; font-weight: 600; }
 #about::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(224,82,26,.3) 40%, rgba(224,82,26,.3) 60%, transparent); }
 .about-orb { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(224,82,26,.08) 0%, transparent 65%); border-radius: 50%; bottom: -250px; left: -150px; pointer-events: none; }
 .founders-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin-top: 2.2rem; }
@@ -1246,7 +1251,7 @@ section[id], #hero { scroll-margin-top: 90px; }
         <div class="founder-body">
           <div class="founder-name">Fassie Loynab</div>
           <div class="founder-handle"><a href="https://www.instagram.com/fassielo" target="_blank" rel="noopener">@fassielo</a> · <a href="https://www.tiktok.com/@fassielo" target="_blank" rel="noopener">TikTok</a></div>
-          <div class="founder-bio">Ich bin der Stratege von uns beiden. Was auf TikTok funktioniert, weiß ich nicht aus Kursen — sondern weil ich's mit meinem eigenen Kanal bewiesen hab.</div>
+          <div class="founder-bio">Ich teste mich durch Münsters Food-Szene und bin der Stratege von uns beiden. Was auf TikTok funktioniert, weiß ich nicht aus Kursen — sondern weil ich's mit meinem eigenen Kanal bewiesen hab.</div>
         </div>
       </div>
       <div class="founder-card tilt-card anim-right anim-delay-2">
@@ -1257,9 +1262,15 @@ section[id], #hero { scroll-margin-top: 90px; }
         <div class="founder-body">
           <div class="founder-name">Lion Sow</div>
           <div class="founder-handle"><a href="https://www.instagram.com/homemeal99" target="_blank" rel="noopener">@homemeal99</a> · <a href="https://www.tiktok.com/@homemeal99" target="_blank" rel="noopener">TikTok</a></div>
-          <div class="founder-bio">Ich bin das Auge. Dreh, Schnitt, Look — wenn dir eins unserer Videos im Kopf bleibt, war ich das.</div>
+          <div class="founder-bio">Ich filme, was in der Küche passiert, und bin das Auge. Dreh, Schnitt, Look — wenn dir eins unserer Videos im Kopf bleibt, war ich das.</div>
         </div>
       </div>
+    </div>
+    <div class="about-story anim anim-delay-2">
+      <span class="about-story-kicker">Wie alles anfing</span>
+      <p>Wir sind Fassie und Lion — zwei Content Creator aus Münster, beide zuhause in der Food-Nische. Fassie testet sich durch die Läden der Stadt, Lion filmt, was in der Küche passiert. Essen ist unser Ding, Social Media sowieso.</p>
+      <p>Losgegangen ist es aber nicht mit einem Auftrag, sondern mit einer Herzenssache: Wir haben Videos für einen Verein gedreht, der überschüssiges Essen bei Läden abholt und an Obdachlose in Münster verteilt. Einfach, weil's uns wichtig war.</p>
+      <p>Irgendwann fragte der erste Laden: „Könnt ihr das auch für uns machen?" Wir haben Ja gesagt — aus einem Gefallen wurde der nächste, dann der übernächste. <em>Vom sozialen Projekt für Münster zur festen Adresse für Gastro-Content.</em></p>
     </div>
     <div class="about-stats-row anim anim-delay-3">
       <div class="about-stat"><div class="about-stat-num" data-count="680" data-suffix="k+">680k+</div><div class="about-stat-label">Eigene Follower</div></div>
