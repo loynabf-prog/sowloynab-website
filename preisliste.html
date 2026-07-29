@@ -2,158 +2,154 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#100b09">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pakete">
 <title>Pakete — Sow & Loynab Media</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e0521a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='26' font-weight='bold' fill='%23fff' text-anchor='middle'%3ES%26L%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg:      #100b09;
-  --text:    #f5efe4;
-  --muted:   rgba(245,239,228,.52);
-  --faint:   rgba(245,239,228,.30);
-  --gold:    #e0521a;
-  --gold-l:  #ff8a50;
-  --line:    rgba(245,239,228,.09);
+  --gold:   #e0521a;
+  --gold-l: #ff8a50;
+  --text:   #f4f0ea;
+  --muted:  rgba(244,240,234,.50);
+  --faint:  rgba(244,240,234,.28);
+  --line:   rgba(255,255,255,.07);
 }
-html { -webkit-text-size-adjust: 100%; background: var(--bg); height: 100%; }
+html { height: 100%; background: #000; -webkit-text-size-adjust: 100%; }
 body {
-  background:
-    radial-gradient(1200px 800px at 50% -12%, rgba(224,82,26,.13) 0%, transparent 62%),
-    var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", system-ui, Roboto, sans-serif;
   color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif;
+  background:
+    radial-gradient(58% 42% at 50% 40%, rgba(224,82,26,.10) 0%, transparent 62%),
+    #000;
   min-height: 100vh; min-height: 100dvh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: clamp(1rem, 3vh, 2.4rem) clamp(1rem, 3vw, 2.4rem);
-  overflow-x: hidden;
+  padding: clamp(1rem, 4vh, 3rem) clamp(1rem, 3vw, 2.6rem);
+  overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  user-select: none; -webkit-user-select: none;
 }
 ::selection { background: var(--gold); color: #fff; }
 
-.grain { position: fixed; inset: -10%; z-index: 60; pointer-events: none; opacity: .035; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  background-repeat: repeat; }
+/* ── quiet branding, corners only ── */
+.mark { position: fixed; top: clamp(1rem,3vh,1.8rem); left: clamp(1.1rem,3vw,2rem); font-size: .92rem; font-weight: 600; letter-spacing: .01em; color: rgba(244,240,234,.22); }
+.mark b { color: rgba(244,240,234,.34); font-weight: 700; }
+.mark .amp { color: rgba(224,82,26,.55); }
+.credit { position: fixed; bottom: clamp(1rem,3vh,1.8rem); left: clamp(1.1rem,3vw,2rem); font-size: .72rem; letter-spacing: .02em; color: rgba(244,240,234,.20); }
 
-/* ── the only branding on the page ── */
-.wordmark { display: inline-flex; align-items: center; gap: .6rem; margin-bottom: clamp(1.6rem, 4.5vh, 3rem); user-select: none; }
-.wordmark .mk { width: 30px; height: 30px; border-radius: 8px;
-  background: linear-gradient(135deg, #e0521a 0%, #ff8a50 55%, #e0521a 100%);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Space Grotesk', sans-serif; font-size: .56rem; font-weight: 700; color: #fff;
-  box-shadow: 0 2px 12px rgba(224,82,26,.4); }
-.wordmark .nm { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: .74rem; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); }
+/* ── fullscreen toggle ── */
+.fs { position: fixed; bottom: clamp(1rem,3vh,1.7rem); right: clamp(1.1rem,3vw,2rem); z-index: 40;
+  width: 38px; height: 38px; border-radius: 11px; border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03); color: rgba(244,240,234,.4); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: color .2s, border-color .2s, opacity .3s; }
+.fs:hover { color: var(--gold-l); border-color: rgba(224,82,26,.4); }
+.fs svg { width: 17px; height: 17px; }
+:fullscreen .fs .i-open, :-webkit-full-screen .fs .i-open { display: none; }
+.fs .i-close { display: none; }
+:fullscreen .fs .i-close, :-webkit-full-screen .fs .i-close { display: block; }
 
 /* ── DECK ── */
-.deck { display: flex; gap: clamp(1rem, 2.4vw, 2rem); align-items: center; justify-content: center; flex-wrap: nowrap; }
+.deck { display: flex; gap: clamp(1.3rem, 4vw, 3.4rem); align-items: stretch; justify-content: center; flex-wrap: nowrap; }
 
-.card { position: relative; width: clamp(238px, 26vw, 316px); aspect-ratio: 5 / 7; cursor: pointer;
-  perspective: 1700px; flex: 0 0 auto; user-select: none; outline: none;
-  transition: transform .4s cubic-bezier(.22,1,.36,1); }
-.card:focus-visible { outline: 2px solid var(--gold-l); outline-offset: 9px; border-radius: 24px; }
-.card--featured { transform: scale(1.06); z-index: 3; }
+.card { position: relative; width: clamp(236px, 24vw, 320px); aspect-ratio: 1 / 1.2; cursor: pointer;
+  perspective: 1700px; flex: 0 0 auto; outline: none; }
+.card:focus-visible { outline: 2px solid rgba(224,82,26,.6); outline-offset: 10px; border-radius: 26px; }
 
 .card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d;
-  border-radius: 22px; box-shadow: 0 22px 50px rgba(0,0,0,.5); }
+  border-radius: 26px; box-shadow: 0 24px 60px rgba(0,0,0,.6); }
 .card.is-flipped .card-inner { transform: rotateY(180deg); }
 
-.face { position: absolute; inset: 0; border-radius: 22px; -webkit-backface-visibility: hidden; backface-visibility: hidden;
-  overflow: hidden; display: flex; flex-direction: column; padding: clamp(1.3rem, 1.9vw, 1.9rem) clamp(1.25rem, 1.7vw, 1.7rem);
-  border: 1px solid var(--line); background: linear-gradient(168deg, #221812 0%, #17110e 58%, #130d0b 100%); }
+.face { position: absolute; inset: 0; border-radius: 26px; -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  overflow: hidden; display: flex; flex-direction: column;
+  padding: clamp(1.5rem, 3.2vh, 2.5rem) clamp(1.3rem, 1.8vw, 1.8rem);
+  border: 1px solid var(--line);
+  background: linear-gradient(165deg, #131313 0%, #0d0d0d 60%, #0a0a0a 100%); }
 .face.back { transform: rotateY(180deg); }
-.card--featured .face { border-color: rgba(224,82,26,.5);
-  background: linear-gradient(168deg, #301e18 0%, #1c1310 58%, #150d0b 100%);
-  box-shadow: inset 0 0 0 1px rgba(224,82,26,.22), inset 0 1px 0 rgba(255,255,255,.05); }
-.card--featured .card-inner { box-shadow: 0 26px 64px rgba(0,0,0,.55), 0 0 46px rgba(224,82,26,.16); }
-.face::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: rgba(245,239,228,.08); }
-.card--featured .face::before { background: linear-gradient(90deg, var(--gold), var(--gold-l)); height:4px; }
+
+/* recommended = same design, just a subtle warm breath + label */
+.card--rec .face {
+  border-color: rgba(224,82,26,.26);
+  background:
+    radial-gradient(135% 78% at 50% 4%, rgba(224,82,26,.15) 0%, transparent 52%),
+    linear-gradient(165deg, #171210 0%, #0e0b0a 60%, #0a0908 100%); }
+.card--rec .card-inner { box-shadow: 0 26px 70px rgba(0,0,0,.6), 0 0 46px rgba(224,82,26,.10); }
 
 /* ── FRONT ── */
-.name { text-align:center; font-family:'Playfair Display', serif; font-style:italic; font-weight:700;
-  font-size: clamp(1.6rem, 2.7vw, 2.15rem); line-height:1.02; letter-spacing:-.01em; }
-.card--featured .name { color: var(--gold-l); }
-.rec { display:block; text-align:center; font-family:'Space Grotesk', sans-serif; font-size:.58rem; font-weight:700;
-  letter-spacing:.2em; text-transform:uppercase; color: var(--gold-l); margin-bottom:.55rem; }
-.rec-spacer { height:.58rem; margin-bottom:.55rem; }
+.top { display: flex; align-items: center; justify-content: center; gap: .55rem; min-height: 1.4rem; }
+.name { font-size: 1.02rem; font-weight: 500; letter-spacing: .01em; color: var(--muted); }
+.card--rec .name { color: rgba(244,240,234,.72); }
+.rec { font-size: .58rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--gold-l);
+  border: 1px solid rgba(224,82,26,.5); border-radius: 100px; padding: .22rem .55rem; line-height: 1; }
 
-.big { text-align:center; margin-top: clamp(1rem, 2.4vh, 1.6rem); }
-.big .n { font-family:'Space Grotesk', sans-serif; font-weight:700; font-size: clamp(3rem, 6vw, 4rem); line-height:.95; }
-.card--featured .big .n { color: var(--gold-l); }
-.big .u { font-size:.78rem; font-weight:600; letter-spacing:.04em; margin-top:.25rem; }
-.big .f { font-size:.72rem; color: var(--muted); margin-top:.15rem; }
+.mid { text-align: center; margin: auto 0; }
+.num { font-size: clamp(3.4rem, 7vw, 4.9rem); font-weight: 700; line-height: .9; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.unit { font-size: 1.05rem; font-weight: 500; margin-top: .55rem; }
+.freq { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
 
-.rule { height:1px; background: var(--line); margin: clamp(1rem,2.2vh,1.5rem) 0; }
-.card--featured .rule { background: rgba(224,82,26,.26); }
-
-.price { text-align:center; margin-top:auto; }
-.price .a { font-family:'Space Grotesk', sans-serif; font-weight:700; font-size: clamp(1.9rem, 3.4vw, 2.4rem); letter-spacing:-.01em; }
-.price .a i { font-style:normal; font-size:.9rem; font-weight:600; color: var(--muted); }
-.price .p { font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color: var(--faint); margin-top:.3rem; }
-.vsum { text-align:center; margin-top:.85rem; font-size:.8rem; color: var(--muted); }
-.vsum b { color: var(--text); font-weight:700; }
+.bot { text-align: center; }
+.amt { font-size: clamp(1.7rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -.01em; }
+.per { font-size: .74rem; color: var(--muted); margin-top: .25rem; }
+.vids { font-size: .84rem; color: var(--muted); margin-top: clamp(1rem, 2.6vh, 1.7rem); }
+.vids b { color: var(--text); font-weight: 600; }
 
 /* ── BACK ── */
-.b-head { text-align:center; margin-bottom: clamp(.8rem,2vh,1.2rem); }
-.b-head .lbl { font-family:'Space Grotesk', sans-serif; font-size:.58rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color: var(--muted); }
-.b-head .nm { font-family:'Playfair Display', serif; font-style:italic; font-weight:700; font-size: clamp(1.3rem,2.2vw,1.6rem); margin-top:.15rem; }
-.card--featured .b-head .nm { color: var(--gold-l); }
+.b-top { text-align: center; min-height: 1.4rem; }
+.b-name { font-size: 1.02rem; font-weight: 600; color: var(--text); }
+.card--rec .b-name { color: var(--gold-l); }
+.b-sub { font-size: .64rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; }
+.specs { margin: auto 0; width: 100%; }
+.spec { display: flex; align-items: baseline; gap: .75rem; padding: clamp(.5rem,1.5vh,.85rem) .2rem; border-top: 1px solid var(--line); }
+.spec .q { font-size: 1.4rem; font-weight: 700; line-height: 1; color: var(--gold-l); min-width: 1.7rem; text-align: right; font-variant-numeric: tabular-nums; }
+.spec .l { font-size: .9rem; font-weight: 500; line-height: 1.2; }
+.spec .l small { display: block; font-weight: 400; font-size: .7rem; color: var(--muted); margin-top: .12rem; }
+.eq { text-align: center; font-size: .84rem; font-weight: 500; color: var(--muted); padding-top: clamp(.8rem,2vh,1.2rem); border-top: 1px solid var(--line); }
+.eq b { color: var(--text); font-weight: 700; }
+.card--rec .eq b { color: var(--gold-l); }
 
-.spec { display:flex; align-items:baseline; gap:.7rem; padding: clamp(.55rem,1.4vh,.8rem) 0; border-top:1px solid var(--line); }
-.card--featured .spec { border-color: rgba(224,82,26,.18); }
-.spec .q { font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.35rem; line-height:1; color: var(--gold-l); min-width:1.6rem; text-align:right; }
-.spec .l { font-size:.86rem; font-weight:600; line-height:1.25; }
-.spec .l small { display:block; font-weight:400; font-size:.68rem; color: var(--muted); margin-top:.1rem; }
-
-.total { margin-top:auto; padding-top: clamp(.9rem,2vh,1.3rem); border-top:1px solid var(--line); text-align:center; }
-.card--featured .total { border-color: rgba(224,82,26,.26); }
-.total .eq { font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:.92rem; }
-.total .eq b { color: var(--gold-l); }
-
-/* ── LIFT · ROTATE · SET-DOWN animation ── */
-@keyframes liftFlipBack {
-  0%   { transform: rotateY(0deg)   translateY(0)     scale(1);    box-shadow: 0 22px 50px rgba(0,0,0,.5); }
-  26%  { transform: rotateY(0deg)   translateY(-16px) scale(1.06); box-shadow: 0 48px 90px rgba(0,0,0,.6); }
-  50%  { transform: rotateY(90deg)  translateY(-20px) scale(1.075);box-shadow: 0 56px 100px rgba(0,0,0,.62); }
-  74%  { transform: rotateY(180deg) translateY(-16px) scale(1.06); box-shadow: 0 48px 90px rgba(0,0,0,.6); }
-  100% { transform: rotateY(180deg) translateY(0)     scale(1);    box-shadow: 0 22px 50px rgba(0,0,0,.5); }
+/* ── lift · rotate · set-down ── */
+@keyframes liftBack {
+  0%   { transform: rotateY(0)      translateY(0)     scale(1);     box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+  26%  { transform: rotateY(0)      translateY(-16px) scale(1.05);  box-shadow: 0 50px 92px rgba(0,0,0,.65); }
+  50%  { transform: rotateY(90deg)  translateY(-20px) scale(1.065); box-shadow: 0 58px 104px rgba(0,0,0,.68); }
+  74%  { transform: rotateY(180deg) translateY(-16px) scale(1.05);  box-shadow: 0 50px 92px rgba(0,0,0,.65); }
+  100% { transform: rotateY(180deg) translateY(0)     scale(1);     box-shadow: 0 24px 60px rgba(0,0,0,.6); }
 }
-@keyframes liftFlipFront {
-  0%   { transform: rotateY(180deg) translateY(0)     scale(1);    box-shadow: 0 22px 50px rgba(0,0,0,.5); }
-  26%  { transform: rotateY(180deg) translateY(-16px) scale(1.06); box-shadow: 0 48px 90px rgba(0,0,0,.6); }
-  50%  { transform: rotateY(90deg)  translateY(-20px) scale(1.075);box-shadow: 0 56px 100px rgba(0,0,0,.62); }
-  74%  { transform: rotateY(0deg)   translateY(-16px) scale(1.06); box-shadow: 0 48px 90px rgba(0,0,0,.6); }
-  100% { transform: rotateY(0deg)   translateY(0)     scale(1);    box-shadow: 0 22px 50px rgba(0,0,0,.5); }
+@keyframes liftFront {
+  0%   { transform: rotateY(180deg) translateY(0)     scale(1);     box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+  26%  { transform: rotateY(180deg) translateY(-16px) scale(1.05);  box-shadow: 0 50px 92px rgba(0,0,0,.65); }
+  50%  { transform: rotateY(90deg)  translateY(-20px) scale(1.065); box-shadow: 0 58px 104px rgba(0,0,0,.68); }
+  74%  { transform: rotateY(0)      translateY(-16px) scale(1.05);  box-shadow: 0 50px 92px rgba(0,0,0,.65); }
+  100% { transform: rotateY(0)      translateY(0)     scale(1);     box-shadow: 0 24px 60px rgba(0,0,0,.6); }
 }
 
-/* iPad portrait / phones */
 @media (max-width: 900px) {
-  .deck { flex-wrap: wrap; gap: 1.3rem 1rem; }
-  .card { width: clamp(238px, 43vw, 300px); }
-  .card--featured { order:-1; width: clamp(260px, 72vw, 330px); }
+  .deck { flex-wrap: wrap; gap: 1.4rem; }
+  .card { width: clamp(230px, 42vw, 300px); }
+  .card--rec { order: -1; width: clamp(250px, 70vw, 330px); }
+  .credit { position: static; margin-top: 1.6rem; }
 }
 @media (max-width: 560px) {
   body { justify-content: flex-start; }
-  .card, .card--featured { width: min(84vw, 320px); }
+  .mark, .credit { position: static; }
+  .mark { margin-bottom: 1.4rem; }
+  .card, .card--rec { width: min(82vw, 320px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .card-inner { transition: transform .3s; }
-  @keyframes liftFlipBack  { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
-  @keyframes liftFlipFront { from { transform: rotateY(180deg); } to { transform: rotateY(0); } }
+  @keyframes liftBack  { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
+  @keyframes liftFront { from { transform: rotateY(180deg); } to { transform: rotateY(0); } }
 }
 </style>
 </head>
 <body>
-<div class="grain" aria-hidden="true"></div>
 
-<div class="wordmark">
-  <span class="mk">S&amp;L</span>
-  <span class="nm">Sow &amp; Loynab Media</span>
-</div>
+<div class="mark"><b>Sow</b><span class="amp">&amp;</span><b>Loynab</b></div>
 
 <div class="deck">
 
@@ -161,53 +157,53 @@ body {
   <div class="card" tabindex="0" role="button" aria-label="Starter – umdrehen">
     <div class="card-inner">
       <div class="face front">
-        <span class="rec-spacer"></span>
-        <div class="name">Starter</div>
-        <div class="big">
-          <div class="n">4</div>
-          <div class="u">Postings / Monat</div>
-          <div class="f">1 Posting pro Woche</div>
+        <div class="top"><span class="name">Starter</span></div>
+        <div class="mid">
+          <div class="num">4</div>
+          <div class="unit">Postings</div>
+          <div class="freq">Eins pro Woche</div>
         </div>
-        <div class="rule"></div>
-        <div class="price">
-          <div class="a">1.000 <i>€</i></div>
-          <div class="p">pro Monat</div>
-          <div class="vsum"><b>4 Videos</b></div>
+        <div class="bot">
+          <div class="amt">1.000 €</div>
+          <div class="per">pro Monat</div>
+          <div class="vids"><b>4 Videos</b></div>
         </div>
       </div>
       <div class="face back">
-        <div class="b-head"><div class="lbl">Enthalten</div><div class="nm">Starter</div></div>
-        <div class="spec"><div class="q">2</div><div class="l">Straßeninterviews<small>Vor Ort gedreht</small></div></div>
-        <div class="spec"><div class="q">2</div><div class="l">Interviewvideos<small>Persönlich &amp; nahbar</small></div></div>
-        <div class="total"><div class="eq">4 Videos = <b>4 Postings</b></div></div>
+        <div class="b-top"><div class="b-name">Starter</div><div class="b-sub">Enthalten</div></div>
+        <div class="specs">
+          <div class="spec"><div class="q">2</div><div class="l">Straßeninterviews<small>Vor Ort gedreht</small></div></div>
+          <div class="spec"><div class="q">2</div><div class="l">Interviewvideos<small>Persönlich &amp; nahbar</small></div></div>
+        </div>
+        <div class="eq">4 Videos = <b>4 Postings</b></div>
       </div>
     </div>
   </div>
 
-  <!-- GROWTH (featured) -->
-  <div class="card card--featured" tabindex="0" role="button" aria-label="Growth, empfohlen – umdrehen">
+  <!-- GROWTH (recommended) -->
+  <div class="card card--rec" tabindex="0" role="button" aria-label="Growth, empfohlen – umdrehen">
     <div class="card-inner">
       <div class="face front">
-        <span class="rec">★ Empfohlen</span>
-        <div class="name">Growth</div>
-        <div class="big">
-          <div class="n">16</div>
-          <div class="u">Postings / Monat</div>
-          <div class="f">alle 2 Tage ein Posting</div>
+        <div class="top"><span class="name">Growth</span><span class="rec">Empfohlen</span></div>
+        <div class="mid">
+          <div class="num">16</div>
+          <div class="unit">Postings</div>
+          <div class="freq">Alle zwei Tage eins</div>
         </div>
-        <div class="rule"></div>
-        <div class="price">
-          <div class="a">1.500 <i>€</i></div>
-          <div class="p">pro Monat</div>
-          <div class="vsum"><b>7 Videos</b> + 9 Extraclips</div>
+        <div class="bot">
+          <div class="amt">1.500 €</div>
+          <div class="per">pro Monat</div>
+          <div class="vids"><b>7 Videos</b> + 9 Extra-Clips</div>
         </div>
       </div>
       <div class="face back">
-        <div class="b-head"><div class="lbl">Enthalten</div><div class="nm">Growth</div></div>
-        <div class="spec"><div class="q">3</div><div class="l">Straßeninterviews<small>Vor Ort gedreht</small></div></div>
-        <div class="spec"><div class="q">4</div><div class="l">Interviewvideos<small>Persönlich &amp; nahbar</small></div></div>
-        <div class="spec"><div class="q">9</div><div class="l">Recycelte Clips<small>Extra-Content aus dem Dreh</small></div></div>
-        <div class="total"><div class="eq">7 Videos + 9 Clips = <b>16 Postings</b></div></div>
+        <div class="b-top"><div class="b-name">Growth</div><div class="b-sub">Enthalten</div></div>
+        <div class="specs">
+          <div class="spec"><div class="q">3</div><div class="l">Straßeninterviews<small>Vor Ort gedreht</small></div></div>
+          <div class="spec"><div class="q">4</div><div class="l">Interviewvideos<small>Persönlich &amp; nahbar</small></div></div>
+          <div class="spec"><div class="q">9</div><div class="l">Recycelte Clips<small>Extra-Content aus dem Dreh</small></div></div>
+        </div>
+        <div class="eq">7 Videos + 9 Clips = <b>16 Postings</b></div>
       </div>
     </div>
   </div>
@@ -216,51 +212,71 @@ body {
   <div class="card" tabindex="0" role="button" aria-label="Premium – umdrehen">
     <div class="card-inner">
       <div class="face front">
-        <span class="rec-spacer"></span>
-        <div class="name">Premium</div>
-        <div class="big">
-          <div class="n">26</div>
-          <div class="u">Postings / Monat</div>
-          <div class="f">fast täglich ein Posting</div>
+        <div class="top"><span class="name">Premium</span></div>
+        <div class="mid">
+          <div class="num">26</div>
+          <div class="unit">Postings</div>
+          <div class="freq">Fast jeden Tag eins</div>
         </div>
-        <div class="rule"></div>
-        <div class="price">
-          <div class="a">2.500 <i>€</i></div>
-          <div class="p">pro Monat</div>
-          <div class="vsum"><b>11 Videos</b> + 15 Extraclips</div>
+        <div class="bot">
+          <div class="amt">2.500 €</div>
+          <div class="per">pro Monat</div>
+          <div class="vids"><b>11 Videos</b> + 15 Extra-Clips</div>
         </div>
       </div>
       <div class="face back">
-        <div class="b-head"><div class="lbl">Enthalten</div><div class="nm">Premium</div></div>
-        <div class="spec"><div class="q">5</div><div class="l">Straßeninterviews<small>Vor Ort gedreht</small></div></div>
-        <div class="spec"><div class="q">6</div><div class="l">Interviewvideos<small>Persönlich &amp; nahbar</small></div></div>
-        <div class="spec"><div class="q">15</div><div class="l">Recycelte Clips<small>Extra-Content aus dem Dreh</small></div></div>
-        <div class="total"><div class="eq">11 Videos + 15 Clips = <b>26 Postings</b></div></div>
+        <div class="b-top"><div class="b-name">Premium</div><div class="b-sub">Enthalten</div></div>
+        <div class="specs">
+          <div class="spec"><div class="q">5</div><div class="l">Straßeninterviews<small>Vor Ort gedreht</small></div></div>
+          <div class="spec"><div class="q">6</div><div class="l">Interviewvideos<small>Persönlich &amp; nahbar</small></div></div>
+          <div class="spec"><div class="q">15</div><div class="l">Recycelte Clips<small>Extra-Content aus dem Dreh</small></div></div>
+        </div>
+        <div class="eq">11 Videos + 15 Clips = <b>26 Postings</b></div>
       </div>
     </div>
   </div>
 
 </div>
 
+<div class="credit">Lion Sow &amp; Fassie Loynab · Münster</div>
+
+<button class="fs" aria-label="Vollbild ein/aus" title="Vollbild">
+  <svg class="i-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+  <svg class="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3"/><path d="M20 8V5a1 1 0 0 0-1-1h-3"/><path d="M4 16v3a1 1 0 0 0 1 1h3"/><path d="M20 16v3a1 1 0 0 1-1 1h-3"/></svg>
+</button>
+
 <script>
 (function () {
+  /* flip: lift → rotate → set down; stays flipped until tapped again */
   document.querySelectorAll('.card').forEach(function (card) {
     var inner = card.querySelector('.card-inner');
     var busy = false;
     function flip() {
-      if (busy) return;            // ignore taps mid-animation
+      if (busy) return;
       busy = true;
       var toBack = !card.classList.contains('is-flipped');
-      card.classList.toggle('is-flipped', toBack);   // stays flipped until tapped again
+      card.classList.toggle('is-flipped', toBack);
       inner.style.animation = 'none';
-      void inner.offsetWidth;      // reflow → restart animation
-      inner.style.animation = (toBack ? 'liftFlipBack' : 'liftFlipFront') + ' .9s cubic-bezier(.34,.03,.18,1) forwards';
+      void inner.offsetWidth;
+      inner.style.animation = (toBack ? 'liftBack' : 'liftFront') + ' .9s cubic-bezier(.34,.03,.18,1) forwards';
       setTimeout(function () { busy = false; }, 900);
     }
     card.addEventListener('click', flip);
     card.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
     });
+  });
+
+  /* fullscreen toggle */
+  var fsBtn = document.querySelector('.fs');
+  function fsElement() { return document.fullscreenElement || document.webkitFullscreenElement; }
+  fsBtn.addEventListener('click', function () {
+    var el = document.documentElement;
+    if (!fsElement()) {
+      (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
+    } else {
+      (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+    }
   });
 })();
 </script>
