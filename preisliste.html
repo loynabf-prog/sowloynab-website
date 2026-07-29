@@ -19,6 +19,7 @@
   --muted:  rgba(244,240,234,.50);
   --faint:  rgba(244,240,234,.26);
   --line:   rgba(255,255,255,.07);
+  --ease:   cubic-bezier(.4,0,.2,1);
 }
 html { height: 100%; background: #000; -webkit-text-size-adjust: 100%; }
 body {
@@ -178,6 +179,54 @@ body {
   100%{transform:rotateY(0) translateY(0) scale(1);box-shadow:0 24px 60px rgba(0,0,0,.6);}
 }
 
+/* ── INTRO (einmal beim Öffnen) ── */
+.head h1 .t-l, .head h1 .x, .head h1 .t-r { display: inline-block; }
+.head h1 .t-l { animation: introL .7s var(--ease) .16s backwards; }
+.head h1 .x   { animation: introX .75s var(--ease) .42s backwards, xGlow 3.4s ease-in-out 1.5s infinite; }
+.head h1 .t-r { animation: introR .7s var(--ease) .3s backwards; }
+[data-view="campaigns"] .kicker { animation: introUp .6s var(--ease) .06s backwards; }
+[data-view="campaigns"] .sub    { animation: introUp .6s var(--ease) .52s backwards; }
+[data-view="campaigns"] .camp   { animation: campIn .6s var(--ease) backwards; }
+[data-view="campaigns"] .camp:nth-child(1) { animation-delay: .58s; }
+[data-view="campaigns"] .camp:nth-child(2) { animation-delay: .71s; }
+[data-view="campaigns"] .camp:nth-child(3) { animation-delay: .84s; }
+.camp:active { transform: scale(.97); }
+@keyframes introL { from{opacity:0;transform:translateX(-26px);} to{opacity:1;transform:none;} }
+@keyframes introR { from{opacity:0;transform:translateX(26px);} to{opacity:1;transform:none;} }
+@keyframes introX { 0%{opacity:0;transform:scale(0) rotate(-120deg);} 70%{opacity:1;transform:scale(1.28) rotate(9deg);} 100%{opacity:1;transform:scale(1) rotate(0);} }
+@keyframes introUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:none;} }
+@keyframes campIn { from{opacity:0;transform:translateY(26px) scale(.95);} to{opacity:1;transform:none;} }
+@keyframes xGlow { 0%,100%{text-shadow:0 0 0 rgba(224,82,26,0);} 50%{text-shadow:0 0 20px rgba(224,82,26,.6);} }
+
+/* ── DIVE-IN: übrige Karten weichen zurück ── */
+.camps.dive-active .camp:not(.diving) { opacity: 0; transform: scale(.88); filter: blur(2px);
+  transition: opacity .34s ease, transform .34s var(--ease), filter .34s ease; }
+
+/* ── FOKUS-CHIPS zünden nacheinander ── */
+.view.active .attrs .attr.on { animation: chipPop .55s var(--ease) backwards; }
+.view.active .attrs .attr.on:nth-child(1) { animation-delay: .22s; }
+.view.active .attrs .attr.on:nth-child(2) { animation-delay: .35s; }
+.view.active .attrs .attr.on:nth-child(3) { animation-delay: .48s; }
+.view.active .attrs .attr.on:nth-child(4) { animation-delay: .61s; }
+@keyframes chipPop {
+  0%   { opacity: .25; transform: scale(.9);  box-shadow: 0 0 0 rgba(224,82,26,0); }
+  55%  { opacity: 1;   transform: scale(1.1); box-shadow: 0 0 16px rgba(224,82,26,.5); }
+  100% { opacity: 1;   transform: scale(1);   box-shadow: 0 0 0 rgba(224,82,26,0); }
+}
+
+/* ── PREISKARTEN: gestaffelt aus der Tiefe, Growth zuletzt + Glow-Puls ── */
+.view.active .deck .card { animation: cardRise .62s var(--ease) backwards; }
+.view.active .deck .card:nth-child(1) { animation-delay: .12s; }
+.view.active .deck .card:nth-child(3) { animation-delay: .24s; }
+.view.active .deck .card:nth-child(2) { animation-delay: .42s; }
+.view.active .deck .card--rec .card-inner { animation: recPulse 1.5s ease-out 1s 1; }
+@keyframes cardRise { from{opacity:0;transform:translateY(26px) scale(.96);} to{opacity:1;transform:none;} }
+@keyframes recPulse {
+  0%   { box-shadow: 0 26px 70px rgba(0,0,0,.6), 0 0 46px rgba(224,82,26,.10); }
+  38%  { box-shadow: 0 26px 70px rgba(0,0,0,.6), 0 0 80px rgba(224,82,26,.5); }
+  100% { box-shadow: 0 26px 70px rgba(0,0,0,.6), 0 0 46px rgba(224,82,26,.10); }
+}
+
 @media (max-width: 900px) {
   .deck { flex-wrap: wrap; gap: 1.4rem; }
   .card { width: clamp(230px,42vw,300px); }
@@ -194,6 +243,9 @@ body {
   @keyframes liftFront { from{transform:rotateY(180deg);} to{transform:rotateY(0);} }
   @keyframes dealLeft { from{opacity:0;} to{opacity:1;} }
   @keyframes dealRight { from{opacity:0;} to{opacity:1;} }
+  .head h1 .t-l, .head h1 .x, .head h1 .t-r,
+  [data-view="campaigns"] .kicker, [data-view="campaigns"] .sub, [data-view="campaigns"] .camp,
+  .view.active .attrs .attr.on, .view.active .deck .card, .view.active .deck .card--rec .card-inner { animation: none !important; }
 }
 </style>
 </head>
@@ -216,7 +268,7 @@ body {
   <section class="view active" data-view="campaigns" data-step="0">
     <div class="head">
       <div class="kicker">Zusammenarbeit</div>
-      <h1>Sow &amp; Loynab<span class="x">×</span>Schmackofatz</h1>
+      <h1><span class="t-l">Sow &amp; Loynab</span><span class="x">×</span><span class="t-r">Schmackofatz</span></h1>
       <div class="sub">Wähle eine Kampagne.</div>
     </div>
     <div class="camps">
@@ -473,7 +525,19 @@ body {
 
     current = b;
     if (+b.dataset.step === 1) { lastDetail = id; b.classList.remove('revealed'); }
-    if (id === 'pricing') { priceKicker.textContent = labels[lastDetail]; renderBacks(lastDetail); }
+    if (id === 'campaigns') {
+      var cs = document.querySelector('.camps');
+      cs.classList.remove('dive-active');
+      cs.querySelectorAll('.camp').forEach(function (c) { c.classList.remove('diving'); });
+    }
+    if (id === 'pricing') {
+      document.querySelectorAll('.card').forEach(function (c) {
+        c.classList.remove('is-flipped');
+        c.querySelector('.card-inner').style.animation = '';
+      });
+      priceKicker.textContent = labels[lastDetail];
+      renderBacks(lastDetail);
+    }
     refresh();
   }
 
@@ -481,8 +545,9 @@ body {
     function dive() {
       if (animating) return;
       var target = camp.getAttribute('data-target');
+      document.querySelector('.camps').classList.add('dive-active');
       camp.classList.add('diving');
-      setTimeout(function () { camp.classList.remove('diving'); go(target, 1); }, 300);
+      setTimeout(function () { go(target, 1); }, 340);
     }
     camp.addEventListener('click', dive);
     camp.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dive(); } });
