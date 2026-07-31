@@ -432,7 +432,8 @@ body {
     film:'<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>',
     star:'<path d="M12 3l2.4 5.3L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.7L12 3z"/>',
     chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-    chart:'<path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/>'
+    chart:'<path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/>',
+    calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'
   };
   function svg(k){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+IC[k]+'</svg>'; }
 
@@ -447,7 +448,7 @@ body {
     { icon:'compass', title:'Konzept & Skript',   text:'Wir planen jeden Clip, der zu deinem Laden passt und Gäste bringt.' },
     { icon:'film',    title:'Profi-Schnitt',      text:'Alles fertig geschnitten – du musst nichts tun.' },
     { icon:'star',    title:'Formate mit System', text:'Wir entscheiden als Profis, welche Formate performen. Keine Korrekturschleifen.' },
-    { icon:'chat',    title:'Posten & Community', text:'Wir posten regelmäßig und managen deine Community.' },
+    { icon:'calendar', title:'Regelmäßiges Posten', text:'Wir veröffentlichen deine Videos regelmäßig zur besten Zeit – ohne Aufwand für dich.' },
     { icon:'chart',   title:'Reporting',          text:'Monatlich siehst du schwarz auf weiß, was läuft.' }
   ];
   var PKG_ORDER = ['starter','growth','premium'];
