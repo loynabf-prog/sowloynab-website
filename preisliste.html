@@ -101,6 +101,27 @@ body {
 .view.active .procs .proc:nth-child(5){animation-delay:.42s;} .view.active .procs .proc:nth-child(6){animation-delay:.5s;}
 @keyframes procIn { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:none;} }
 
+/* ── Wachstums-Rhythmus (Sektion 2) ── */
+.rhythm { display: flex; gap: clamp(1rem,2.4vw,2rem); align-items: stretch; justify-content: center; width: 100%; max-width: 900px; }
+.rcard { position: relative; flex: 1; max-width: 280px; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(165deg,#131313,#0c0c0c); padding: clamp(1.1rem,2vw,1.5rem); text-align: center; }
+.rcard--rec { border-color: rgba(224,82,26,.4); background: radial-gradient(130% 80% at 50% 0%, rgba(224,82,26,.14) 0%, transparent 55%), linear-gradient(165deg,#171210,#0c0a09); box-shadow: 0 0 40px rgba(224,82,26,.12); }
+.r-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); font-size: .58rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #fff; background: linear-gradient(105deg,var(--gold),var(--gold-l)); padding: .25rem .7rem; border-radius: 100px; box-shadow: 0 4px 14px rgba(224,82,26,.5); white-space: nowrap; }
+.r-bar-wrap { height: clamp(110px,18vh,170px); display: flex; align-items: flex-end; justify-content: center; margin-bottom: 1rem; }
+.r-bar { width: 46px; border-radius: 10px 10px 4px 4px; height: 0; background: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.07)); transition: height .9s cubic-bezier(.4,0,.2,1); }
+.rcard--rec .r-bar { background: linear-gradient(180deg, var(--gold-l), var(--gold)); box-shadow: 0 0 24px rgba(224,82,26,.4); }
+.view.active .rhythm .rcard:nth-child(1) .r-bar { transition-delay: .1s; }
+.view.active .rhythm .rcard:nth-child(2) .r-bar { transition-delay: .25s; }
+.view.active .rhythm .rcard:nth-child(3) .r-bar { transition-delay: .4s; }
+.view.active .rhythm .r-bar { height: var(--h); }
+.r-freq { font-size: 1.05rem; font-weight: 700; }
+.rcard--rec .r-freq { color: var(--gold-l); }
+.r-post { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+.r-verdict { font-size: .82rem; color: var(--muted); margin-top: .7rem; line-height: 1.4; }
+@media (max-width:760px){ .rhythm{gap:.55rem} .rcard{padding:.9rem .55rem} .r-bar{width:30px} .r-bar-wrap{height:clamp(84px,13vh,120px);} .r-freq{font-size:.9rem} .r-post{font-size:.72rem} .r-verdict{font-size:.75rem} }
+@media (prefers-reduced-motion: reduce){ .r-bar{transition:none!important;} }
+
+
+
 .d-actions { display: flex; align-items: center; gap: 1rem; margin-top: clamp(1.4rem,3.5vh,2.4rem); flex-wrap: wrap; justify-content: center; }
 .cta { display: inline-flex; align-items: center; gap: .55rem; cursor: pointer; font-size: .94rem; font-weight: 600; color: #fff;
   background: linear-gradient(105deg, var(--gold), var(--gold-l)); border: none; border-radius: 100px; padding: .9rem 1.9rem;
@@ -328,11 +349,11 @@ body {
   <!-- 1 · process (Ablauf & Leistung) -->
   <section class="view" data-view="process" data-step="1">
     <div class="head">
-      <div class="kicker">Unsere Leistung</div>
-      <h2>Das bekommst du</h2>
-      <div class="d-lead">Ein Drehtag – wir übernehmen den kompletten Rest.</div>
+      <div class="kicker">Warum alle 2 Tage?</div>
+      <h2>Konstanz macht Wachstum</h2>
+      <div class="d-lead">Wie oft du postest, entscheidet, wie schnell du wächst.</div>
     </div>
-    <div class="procs"></div>
+    <div class="rhythm" id="rhythm"></div>
     <div class="d-actions">
       <button class="cta" data-target="potential">Weiter
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -443,13 +464,10 @@ body {
     'c-brand':      { label:'Brand-Image-Kampagne', fmtA:'Behind-the-Scenes', fmtB:'Story-Videos' },
     'c-recruiting': { label:'Recruiting-Kampagne',  fmtA:'Team-Stories',      fmtB:'Arbeitsplatz-Einblicke' }
   };
-  var PROCESS = [
-    { icon:'camera',  title:'1 Drehtag im Monat', text:'Wir kommen zu dir vor Ort und drehen alles an einem Tag.' },
-    { icon:'compass', title:'Konzept & Skript',   text:'Wir planen jeden Clip, der zu deinem Laden passt und Gäste bringt.' },
-    { icon:'film',    title:'Profi-Schnitt',      text:'Alles fertig geschnitten – du musst nichts tun.' },
-    { icon:'star',    title:'Formate mit System', text:'Wir entscheiden als Profis, welche Formate performen. Keine Korrekturschleifen.' },
-    { icon:'calendar', title:'Regelmäßiges Posten', text:'Wir veröffentlichen deine Videos regelmäßig zur besten Zeit – ohne Aufwand für dich.' },
-    { icon:'chart',   title:'Reporting',          text:'Monatlich siehst du schwarz auf weiß, was läuft.' }
+  var RHYTHM = [
+    { key:'starter', bar:26, verdict:'Zu selten – der Algorithmus verliert dich.' },
+    { key:'growth',  bar:82, verdict:'Der Sweet Spot – hier zündet dein Wachstum.' },
+    { key:'premium', bar:96, verdict:'Maximaler Push – für alle, die voll angreifen.' }
   ];
   var PKG_ORDER = ['starter','growth','premium'];
   var PKG_NAMES = { starter:'Starter', growth:'Growth', premium:'Premium' };
@@ -458,8 +476,15 @@ body {
   document.getElementById('clientName').textContent = CONFIG.client;
 
   /* ── build process cards ── */
-  document.querySelector('.procs').innerHTML = PROCESS.map(function(s,i){
-    return '<div class="proc"><span class="pn">'+(i+1)+'</span><span class="pi">'+svg(s.icon)+'</span><div class="pt">'+s.title+'</div><div class="ps">'+s.text+'</div></div>';
+  document.getElementById('rhythm').innerHTML = RHYTHM.map(function(r){
+    var p = CONFIG.packages[r.key], rec = !!p.recommended;
+    return '<div class="rcard'+(rec?' rcard--rec':'')+'">'
+      + (rec?'<span class="r-badge">Empfohlen</span>':'')
+      + '<div class="r-bar-wrap"><div class="r-bar" style="--h:'+r.bar+'%"></div></div>'
+      + '<div class="r-freq">'+p.freq+'</div>'
+      + '<div class="r-post">'+p.postings+' Postings / Monat</div>'
+      + '<div class="r-verdict">'+r.verdict+'</div>'
+      + '</div>';
   }).join('');
 
   /* ── build pricing deck ── */
