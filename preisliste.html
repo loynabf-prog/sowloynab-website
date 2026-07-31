@@ -237,6 +237,20 @@ body {
 .sign-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 100%; max-width: 470px; }
 .sum { font-size: 1rem; color: var(--muted); text-align: center; }
 .sum b { color: var(--text); font-weight: 700; }
+.next-steps { width: 100%; }
+.ns-title { text-align: center; font-size: .7rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+.ns-row { display: flex; gap: .6rem; justify-content: center; }
+.ns { flex: 1; max-width: 150px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.02); padding: .85rem .6rem; text-align: center; }
+.ns-n { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg,var(--gold),var(--gold-l)); color: #fff; font-size: .8rem; font-weight: 700; margin-bottom: .45rem; }
+.ns-t { font-size: .83rem; font-weight: 600; line-height: 1.2; }
+.ns-s { font-size: .72rem; color: var(--muted); margin-top: .15rem; }
+.view.active .ns { animation: nsIn .5s var(--ease) backwards; }
+.view.active .ns-row .ns:nth-child(1){ animation-delay: .1s; }
+.view.active .ns-row .ns:nth-child(2){ animation-delay: .22s; }
+.view.active .ns-row .ns:nth-child(3){ animation-delay: .34s; }
+@keyframes nsIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:none;} }
+@media (max-width:760px){ .ns{padding:.7rem .4rem} .ns-t{font-size:.76rem} .ns-s{font-size:.68rem} .ns-row{gap:.4rem} }
+@media (prefers-reduced-motion: reduce){ .view.active .ns{animation:none!important;} }
 .sig-box { position: relative; width: 100%; height: clamp(150px,22vh,190px); border: 1px dashed rgba(224,82,26,.4); border-radius: 16px; background: rgba(255,255,255,.02); overflow: hidden; }
 #sigPad { width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
 .sig-line { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-size: .8rem; color: var(--faint); pointer-events: none; }
@@ -415,6 +429,14 @@ body {
     </div>
     <div class="sign-wrap">
       <div class="sum" id="signSum"></div>
+      <div class="next-steps">
+        <div class="ns-title">Nach deiner Unterschrift</div>
+        <div class="ns-row">
+          <div class="ns"><span class="ns-n">1</span><div class="ns-t">Kickoff-Call</div><div class="ns-s">innerhalb 48 h</div></div>
+          <div class="ns"><span class="ns-n">2</span><div class="ns-t">Drehtag bei dir</div><div class="ns-s">vor Ort in Münster</div></div>
+          <div class="ns"><span class="ns-n">3</span><div class="ns-t">Erste Videos live</div><div class="ns-s">in ~2 Wochen</div></div>
+        </div>
+      </div>
       <div class="sig-box">
         <canvas id="sigPad"></canvas>
         <div class="sig-line">Hier mit dem Finger unterschreiben</div>
