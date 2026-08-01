@@ -2579,7 +2579,7 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 })();
 
-/* ── MARQUEE: konstantes Tempo + per Finger/Maus ziehbar ── */
+/* ── MARQUEE: konstantes Tempo + ziehbar mit Schwung (Glücksrad-Feel) ── */
 (function(){
   var track = document.querySelector('.marquee-track');
   if(!track) return;
@@ -2587,8 +2587,12 @@ document.addEventListener('DOMContentLoaded', function(){
   if(!group) return;
   track.style.animation = 'none';
   track.style.willChange = 'transform';
-  var offset = 0, gw = 0, last = 0, dragging = false, startX = 0, startOffset = 0;
-  function measure(){ gw = group.getBoundingClientRect().width; }
+  var offset = 0, gw = 0, last = 0;
+  var dragging = false, startX = 0, startOffset = 0;
+  var v = 0, dragV = 0, lastMoveX = 0, lastMoveT = 0;
+  var FRICTION = 0.9975; /* näher an 1 = rollt länger aus */
+  function baseV(){ return gw > 0 ? -(gw / 32000) : 0; } /* ruhiges Grundtempo, nach links */
+  function measure(){ gw = group.getBoundingClientRect().width; if(gw > 0 && v === 0) v = baseV(); }
   measure();
   setTimeout(measure, 600); /* nach Font-Load nochmal messen */
   window.addEventListener('resize', measure, { passive:true });
@@ -2597,31 +2601,45 @@ document.addEventListener('DOMContentLoaded', function(){
     while(offset <= -gw) offset += gw;
     while(offset > 0) offset -= gw;
   }
-  function apply(){ track.style.transform = 'translateX(' + offset.toFixed(1) + 'px)'; }
+  function apply(){ track.style.transform = 'translateX(' + offset.toFixed(2) + 'px)'; }
   function frame(t){
     if(!last) last = t;
     var dt = t - last; last = t;
-    if(!dragging && !prefersReduced && gw > 0){
-      offset -= (gw / 32000) * dt; /* 32s pro Gruppe = ruhiges Originaltempo, unabhängig vom Scrollen */
+    if(dt > 64) dt = 64;
+    if(!dragging && gw > 0 && !prefersReduced){
+      var bv = baseV();
+      v = bv + (v - bv) * Math.pow(FRICTION, dt); /* Schwung gleitet sanft ins Grundtempo */
+      offset += v * dt;
       wrap(); apply();
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
-  /* Ziehen in beide Richtungen, beim Loslassen läuft es normal weiter */
+  /* Ziehen in beide Richtungen; schnelles Wischen = Schwung, rollt aus */
   var marquee = track.closest('.marquee') || track;
   marquee.style.cursor = 'grab';
   marquee.style.touchAction = 'pan-y'; /* vertikales Seiten-Scrollen bleibt, horizontal = ziehen */
   marquee.addEventListener('pointerdown', function(e){
-    dragging = true; startX = e.clientX; startOffset = offset; marquee.style.cursor = 'grabbing';
+    dragging = true; startX = e.clientX; startOffset = offset;
+    lastMoveX = e.clientX; lastMoveT = performance.now(); dragV = 0;
+    marquee.style.cursor = 'grabbing';
   });
   window.addEventListener('pointermove', function(e){
     if(!dragging) return;
+    var now = performance.now(), dtm = now - lastMoveT;
+    if(dtm > 0) dragV = (e.clientX - lastMoveX) / dtm; /* px/ms in Zieh-/Offset-Richtung */
+    lastMoveX = e.clientX; lastMoveT = now;
     offset = startOffset + (e.clientX - startX);
     wrap(); apply();
   });
-  function endDrag(){ if(!dragging) return; dragging = false; last = 0; marquee.style.cursor = 'grab'; }
+  function endDrag(){
+    if(!dragging) return; dragging = false;
+    var idle = performance.now() - lastMoveT;
+    v = (idle > 120) ? baseV() : Math.max(-4, Math.min(4, dragV)); /* Wurf-Schwung übernehmen */
+    last = 0;
+    marquee.style.cursor = 'grab';
+  }
   window.addEventListener('pointerup', endDrag);
   window.addEventListener('pointercancel', endDrag);
 })();
