@@ -184,6 +184,11 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
   var FORMSPREE = 'https://formspree.io/f/mkodlooe';
   var WA = '491758775258';
   var state = {};
+  /* Quelle aus dem Link lesen: ?q=instagram / ?q=tiktok */
+  var _q = (new URLSearchParams(location.search).get('q') || '').toLowerCase();
+  var SOURCE = (_q === 'ig' || _q === 'instagram') ? 'Instagram'
+             : (_q === 'tt' || _q === 'tiktok') ? 'TikTok'
+             : (_q ? _q : 'Direkt / Unbekannt');
   var steps = [].slice.call(document.querySelectorAll('.step[data-step]'));
   var total = steps.length;
   var cur = 0;
@@ -275,6 +280,7 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
     m += 'Branche: ' + (answer('branche')||'-') + ' · Standort: ' + (answer('standort')||'-') + ' · Social Media: ' + (answer('social')||'-') + '. ';
     m += 'Ich möchte auf die Warteliste.';
     if(kontakt.value.trim()) m += ' Kontakt: ' + kontakt.value.trim();
+    m += ' | Quelle: ' + SOURCE;
     return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(m);
   }
 
@@ -311,7 +317,8 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
     fd.append('Name', name.value.trim());
     fd.append('Lokal', lokal.value.trim());
     fd.append('Kontakt', kontakt.value.trim());
-    fd.append('_subject', 'Neue Warteliste-Anfrage: ' + (lokal.value.trim() || name.value.trim()));
+    fd.append('Quelle', SOURCE);
+    fd.append('_subject', 'Neue Anfrage (' + SOURCE + '): ' + (lokal.value.trim() || name.value.trim()));
     fetch(FORMSPREE, { method:'POST', headers:{'Accept':'application/json'}, body: fd })
       .then(function(){ done(); })
       .catch(function(){ window.open(waLink(),'_blank','noopener'); done(); });
