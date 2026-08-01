@@ -2462,6 +2462,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     document.body.style.overflow = '';
     appFeeds.forEach(function(f){ f.disconnect(); });
     if (previewFeed && previewFeed.el){ previewFeed.el.scrollTop = 0; previewFeed.connect(); }
+    try{ if (location.search.indexOf('cp=') !== -1 || location.hash === '#phone') history.replaceState(null, document.title, location.pathname); }catch(e){}
   }
   if (cpxClose) cpxClose.addEventListener('click', closeApp);
   if (cpx) cpx.addEventListener('click', function(e){ if (e.target === cpx) closeApp(); });
@@ -2482,6 +2483,13 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
         es.forEach(function(e){ if (e.isIntersecting){ var p = teaserVid.play(); if (p && p.catch) p.catch(function(){}); } else teaserVid.pause(); });
       }, { threshold: 0.4 }).observe(teaserVid);
     } else { var pp = teaserVid.play(); if (pp && pp.catch) pp.catch(function(){}); }
+  }
+
+  /* Direkt-Link: ?cp=1 (oder #phone) öffnet das Content Phone sofort im Vollbild.
+     Schließt man es, erscheint die Website dahinter (URL wird in closeApp bereinigt). */
+  var _cpParam = new URLSearchParams(location.search).get('cp');
+  if (cpx && (_cpParam === '1' || _cpParam === 'open' || location.hash === '#phone')) {
+    openApp(0);
   }
 })();
 
