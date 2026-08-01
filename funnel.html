@@ -219,9 +219,16 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
     inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); inp.closest('.other-input').querySelector('.continue').click(); } });
   });
 
+  var stepIndex = { branche:0, standort:1, social:2 };
+  function answer(key){
+    if(state[key] && String(state[key]).trim()) return state[key];
+    var st = steps[stepIndex[key]];
+    if(st){ var box = st.querySelector('.other-input'); var inp = box && box.querySelector('input'); if(inp && inp.value.trim()) return (box.dataset.prefix||'') + inp.value.trim(); }
+    return '';
+  }
   function buildSummary(){
     var s = document.getElementById('summary');
-    s.innerHTML = '<b>Branche:</b> ' + (state.branche||'–') + '<br><b>Standort:</b> ' + (state.standort||'–') + '<br><b>Social Media:</b> ' + (state.social||'–');
+    s.innerHTML = '<b>Branche:</b> ' + (answer('branche')||'–') + '<br><b>Standort:</b> ' + (answer('standort')||'–') + '<br><b>Social Media:</b> ' + (answer('social')||'–');
   }
 
   var name = document.getElementById('c-name');
@@ -243,7 +250,7 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
     var m = 'Hallo Fassie & Lion! ';
     if(name.value.trim()) m += 'Ich bin ' + name.value.trim() + '. ';
     if(lokal.value.trim()) m += 'Lokal: ' + lokal.value.trim() + '. ';
-    m += 'Branche: ' + (state.branche||'-') + ' · Standort: ' + (state.standort||'-') + ' · Social Media: ' + (state.social||'-') + '. ';
+    m += 'Branche: ' + (answer('branche')||'-') + ' · Standort: ' + (answer('standort')||'-') + ' · Social Media: ' + (answer('social')||'-') + '. ';
     m += 'Ich möchte auf die Warteliste.';
     if(kontakt.value.trim()) m += ' Kontakt: ' + kontakt.value.trim();
     return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(m);
@@ -277,9 +284,9 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
     }
     btn.disabled = true; btn.textContent = 'Wird gesendet …';
     var fd = new FormData();
-    fd.append('Branche', state.branche || '');
-    fd.append('Standort', state.standort || '');
-    fd.append('Social Media', state.social || '');
+    fd.append('Branche', answer('branche'));
+    fd.append('Standort', answer('standort'));
+    fd.append('Social Media', answer('social'));
     fd.append('Name', name.value.trim());
     fd.append('Lokal', lokal.value.trim());
     fd.append('Kontakt', kontakt.value.trim());
