@@ -436,8 +436,11 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cp-hint { position: absolute; bottom: 7px; left: 0; right: 0; z-index: 5; text-align: center; font-size: .48rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.5); pointer-events: none; transition: opacity .4s; }
 .cp-hint.hide { opacity: 0; }
 /* ── Vollbild Content Phone ── */
-.cpx { position: fixed; inset: 0; z-index: 3000; background: rgba(8,6,5,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 58px 12px 18px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .35s ease, visibility .35s ease; }
+.cpx { position: fixed; inset: 0; z-index: 3000; background: rgba(8,6,5,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 58px 12px 18px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .35s ease, visibility .35s ease, background .28s ease, backdrop-filter .28s ease; }
 .cpx.open { opacity: 1; visibility: visible; pointer-events: auto; }
+/* Schliessen: erst Hintergrund + Kopf weg (Website erscheint), dann fliegt das Phone in den Button */
+.cpx.closing { background: rgba(8,6,5,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+.cpx.closing .cpx-head, .cpx.closing .cpx-swipehint, .cpx.closing .cpx-close { opacity: 0; transition: opacity .2s ease; pointer-events: none; }
 .cpx-close { position: absolute; top: 14px; right: 16px; z-index: 4; width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,.1); color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
 .cpx-close:hover { background: rgba(255,255,255,.2); }
 .cpx-head { display: flex; justify-content: center; max-width: 94vw; }
@@ -2497,6 +2500,8 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     var dev = cpx.querySelector('.cpx-device');
     var finish = function(){
       cpx.classList.remove('open');
+      cpx.classList.remove('closing');
+      cpx.style.pointerEvents = '';
       cpx.setAttribute('aria-hidden', 'true');
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
@@ -2506,11 +2511,14 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
       try{ if (location.search.indexOf('cp=') !== -1 || location.hash === '#phone') history.replaceState(null, document.title, location.pathname); }catch(e){}
     };
     if (dev && !prefersReduced){
+      /* 1) dunklen Hintergrund + Kopfzeile ausblenden -> Website erscheint sofort */
       cpx.style.pointerEvents = 'none';
-      dev.style.transition = 'transform .42s cubic-bezier(.5,.1,.75,.2), opacity .4s ease';
+      cpx.classList.add('closing');
+      /* 2) Phone bleibt sichtbar und fliegt on-top in den Button; erst ganz am Ende verschwindet der Rest-Punkt */
+      dev.style.transition = 'transform .5s cubic-bezier(.4,.05,.5,1), opacity .18s ease .34s';
       dev.style.transform = collapseTransform();
       dev.style.opacity = '0';
-      closeTimer = setTimeout(function(){ cpx.style.pointerEvents = ''; finish(); }, 430);
+      closeTimer = setTimeout(finish, 520);
     } else {
       finish();
     }
