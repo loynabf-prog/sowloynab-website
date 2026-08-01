@@ -2589,9 +2589,10 @@ document.addEventListener('DOMContentLoaded', function(){
   track.style.willChange = 'transform';
   var offset = 0, gw = 0, last = 0;
   var dragging = false, startX = 0, startOffset = 0;
-  var v = 0, dragV = 0, lastMoveX = 0, lastMoveT = 0;
+  var v = 0, dragV = 0, lastMoveX = 0, lastMoveT = 0, dir = -1;
   var FRICTION = 0.9975; /* näher an 1 = rollt länger aus */
-  function baseV(){ return gw > 0 ? -(gw / 32000) : 0; } /* ruhiges Grundtempo, nach links */
+  function sp(){ return gw > 0 ? gw / 32000 : 0; } /* Tempo-Betrag */
+  function baseV(){ return dir * sp(); } /* Grundtempo in der aktuellen Richtung */
   function measure(){ gw = group.getBoundingClientRect().width; if(gw > 0 && v === 0) v = baseV(); }
   measure();
   setTimeout(measure, 600); /* nach Font-Load nochmal messen */
@@ -2636,7 +2637,9 @@ document.addEventListener('DOMContentLoaded', function(){
   function endDrag(){
     if(!dragging) return; dragging = false;
     var idle = performance.now() - lastMoveT;
-    v = (idle > 120) ? baseV() : Math.max(-4, Math.min(4, dragV)); /* Wurf-Schwung übernehmen */
+    var flick = (idle > 120) ? 0 : dragV;
+    if(Math.abs(flick) > 0.04) dir = flick > 0 ? 1 : -1; /* Richtung = zuletzt gewischte Richtung */
+    v = (Math.abs(flick) > 0.001) ? Math.max(-4, Math.min(4, flick)) : baseV(); /* Wurf-Schwung übernehmen */
     last = 0;
     marquee.style.cursor = 'grab';
   }
