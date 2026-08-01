@@ -2608,6 +2608,11 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     pulseFab();
     var dev = cpx.querySelector('.cpx-device');
     var finish = function(){
+      /* Zu diesem Zeitpunkt ist bereits alles unsichtbar (Hintergrund transparent,
+         Phone im Button verschwunden) -> OHNE Uebergang schliessen, sonst blitzt
+         das volle Phone am Ende kurz auf und blendet aus ("Aufploppen"). */
+      cpx.style.transition = 'none';
+      if (dev){ dev.style.transition = 'none'; dev.style.transform = 'none'; dev.style.opacity = ''; }
       cpx.classList.remove('open');
       cpx.classList.remove('closing');
       cpx.style.pointerEvents = '';
@@ -2616,7 +2621,8 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
       document.body.style.overflow = '';
       appFeeds.forEach(function(f){ f.disconnect(); });
       if (previewFeed && previewFeed.el){ previewFeed.el.scrollTop = 0; previewFeed.connect(); }
-      if (dev){ dev.style.transition = 'none'; dev.style.transform = 'none'; dev.style.opacity = ''; }
+      void cpx.offsetWidth; /* Sofort-Ausblenden festschreiben, bevor die Uebergaenge zurueckkommen */
+      requestAnimationFrame(function(){ cpx.style.transition = ''; });
       try{ if (location.search.indexOf('cp=') !== -1 || location.hash === '#phone') history.replaceState(null, document.title, location.pathname); }catch(e){}
     };
     if (dev && !prefersReduced){
