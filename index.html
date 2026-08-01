@@ -435,6 +435,25 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cp-views { font-size: .5rem; color: rgba(255,255,255,.6); margin-top: 3px; }
 .cp-hint { position: absolute; bottom: 7px; left: 0; right: 0; z-index: 5; text-align: center; font-size: .48rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.5); pointer-events: none; transition: opacity .4s; }
 .cp-hint.hide { opacity: 0; }
+/* ── Content-Phone-Interaktionen: Like, Ton, Zeitleiste (TikTok/Insta-Stil) ── */
+.cp-act { background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+.cp-slide.liked .cp-like { color: #ff2d55; }
+.cp-like svg { transition: transform .25s cubic-bezier(.2,1.6,.4,1); }
+.cp-like.pop svg { transform: scale(1.4); }
+.cp-like-burst { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; }
+.cp-like-burst svg { width: 90px; height: 90px; color: #ff2d55; filter: drop-shadow(0 6px 20px rgba(0,0,0,.55)); }
+.cp-like-burst.burst { animation: cpBurst .85s ease forwards; }
+@keyframes cpBurst { 0%{opacity:0;transform:scale(.3) rotate(-14deg);} 14%{opacity:1;transform:scale(1.15) rotate(-4deg);} 30%{transform:scale(.92) rotate(0);} 68%{opacity:1;transform:scale(1);} 100%{opacity:0;transform:scale(1.25);} }
+.cp-mute { position: absolute; top: 10px; right: 10px; z-index: 6; width: 30px; height: 30px; border: none; border-radius: 50%; background: rgba(0,0,0,.42); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.cp-mute svg { width: 15px; height: 15px; }
+.cpx .cp-mute { width: 40px; height: 40px; top: 12px; right: 12px; }
+.cpx .cp-mute svg { width: 19px; height: 19px; }
+.cp-scrub { position: absolute; left: 0; right: 0; bottom: 0; z-index: 7; height: 22px; display: flex; align-items: flex-end; padding: 0 8px 3px; cursor: pointer; touch-action: none; }
+.cp-scrub-track { position: relative; width: 100%; height: 2.5px; background: rgba(255,255,255,.28); border-radius: 3px; transition: height .15s ease; }
+.cp-scrub.active .cp-scrub-track { height: 5px; }
+.cp-scrub-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #fff; border-radius: 3px; }
+.cp-scrub-knob { position: absolute; top: 50%; left: 0; width: 13px; height: 13px; border-radius: 50%; background: #fff; transform: translate(-50%,-50%) scale(0); transition: transform .15s ease; box-shadow: 0 1px 5px rgba(0,0,0,.5); }
+.cp-scrub.active .cp-scrub-knob { transform: translate(-50%,-50%) scale(1); }
 /* ── Vollbild Content Phone ── */
 .cpx { position: fixed; inset: 0; z-index: 3000; background: rgba(8,6,5,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 58px 12px 18px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .35s ease, visibility .35s ease, background .28s ease, backdrop-filter .28s ease; }
 .cpx.open { opacity: 1; visibility: visible; pointer-events: auto; }
@@ -2359,19 +2378,65 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   var COMMENT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z"/></svg>';
   var SHARE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2 15 22l-4-9-9-4L22 2z"/></svg>';
   var PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"/></svg>';
+  var SPK_ON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.3 5.7a9 9 0 0 1 0 12.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  var SPK_OFF = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M16 9.5l5.5 5M21.5 9.5l-5.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 
   function slide(v, c){
-    return '<div class="cp-slide paused">'
+    return '<div class="cp-slide paused" data-liked="0">'
       + '<video muted loop playsinline preload="none"><source src="' + (v.src || 'hero.mp4') + '" type="video/mp4"></video>'
       + '<div class="cp-grad"></div><div class="cp-play">' + PLAY + '</div>'
-      + '<div class="cp-rail"><div class="cp-act">' + HEART + '<span>' + v.likes + '</span></div>'
+      + '<div class="cp-like-burst">' + HEART + '</div>'
+      + '<button type="button" class="cp-mute" aria-label="Ton an/aus">' + SPK_OFF + '</button>'
+      + '<div class="cp-rail">'
+        + '<button type="button" class="cp-act cp-like" aria-label="Gefällt mir" data-base="' + v.likes + '">' + HEART + '<span>' + v.likes + '</span></button>'
         + '<div class="cp-act">' + COMMENT + '<span>' + v.comments + '</span></div>'
-        + '<div class="cp-act">' + SHARE + '<span>Teilen</span></div></div>'
+        + '<button type="button" class="cp-act cp-share" aria-label="Teilen">' + SHARE + '<span>Teilen</span></button></div>'
       + '<div class="cp-meta"><div class="cp-handle">@' + c.handle + '</div><div class="cp-cap">' + v.cap + '</div><div class="cp-views">' + v.views + ' Views</div></div>'
+      + '<div class="cp-scrub"><div class="cp-scrub-track"><div class="cp-scrub-fill"></div><div class="cp-scrub-knob"></div></div></div>'
       + '</div>';
   }
 
-  /* Feed-Controller: Play/Pause per Tap + nur sichtbares Video spielt (IntersectionObserver) */
+  /* ---- Interaktions-Helfer (Like / Ton / Teilen) ---- */
+  var cpMuted = true; /* globaler Ton-Status wie bei TikTok: einmal an, bleibt an */
+  function parseCount(str){ str = ('' + str).trim().toLowerCase(); var n = parseFloat(str.replace(',', '.')); if (isNaN(n)) return 0; if (str.indexOf('m') > -1) n *= 1000000; else if (str.indexOf('k') > -1) n *= 1000; return Math.round(n); }
+  function fmtCount(n){ if (n >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/, '') + 'M'; if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/, '') + 'k'; return '' + n; }
+  /* Phase 2 (Tracking): hier später Like/View pro Unternehmen ans Backend senden */
+  function cpTrack(action, slideEl){ /* no-op — bereit für Google-Sheet/Analytics-Anbindung */ }
+  function setLiked(slideEl, on){
+    var btn = slideEl.querySelector('.cp-like'); if (!btn) return;
+    var span = btn.querySelector('span'), base = parseCount(btn.getAttribute('data-base'));
+    slideEl.setAttribute('data-liked', on ? '1' : '0');
+    slideEl.classList.toggle('liked', on);
+    span.textContent = on ? fmtCount(base + 1) : fmtCount(base);
+    btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+    cpTrack(on ? 'like' : 'unlike', slideEl);
+  }
+  function tapLike(slideEl){ setLiked(slideEl, slideEl.getAttribute('data-liked') !== '1'); }
+  function doubleTapLike(slideEl){
+    if (slideEl.getAttribute('data-liked') !== '1') setLiked(slideEl, true);
+    var b = slideEl.querySelector('.cp-like-burst'); if (!b) return;
+    b.classList.remove('burst'); void b.offsetWidth; b.classList.add('burst');
+  }
+  function applyMute(){
+    [].forEach.call(document.querySelectorAll('#cpx .cp-slide'), function(s){
+      var v = s.querySelector('video'); if (v) v.muted = cpMuted;
+      var mb = s.querySelector('.cp-mute'); if (mb) mb.innerHTML = cpMuted ? SPK_OFF : SPK_ON;
+    });
+  }
+  function toggleMute(){ cpMuted = !cpMuted; applyMute(); }
+  function doShare(){
+    var url = location.origin + location.pathname + '?cp=1';
+    if (navigator.share) { navigator.share({ title: document.title, url: url }).catch(function(){}); }
+    else if (navigator.clipboard) { navigator.clipboard.writeText(url).catch(function(){}); }
+  }
+  function togglePlay(slideEl){
+    var vid = slideEl.querySelector('video'); if (!vid) return;
+    if (vid.paused) { vid.muted = cpMuted; var p = vid.play(); if (p && p.catch) p.catch(function(){}); slideEl.classList.remove('paused'); }
+    else { vid.pause(); slideEl.classList.add('paused'); }
+  }
+
+  /* Feed-Controller: Tap=Play/Pause, Doppeltipp=Like, Zeitleiste zum Spulen,
+     nur sichtbares Video spielt (IntersectionObserver) */
   function makeFeed(feedEl){
     var io = null;
     function connect(){
@@ -2380,6 +2445,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
         entries.forEach(function(e){
           var s = e.target, vid = s.querySelector('video'); if (!vid) return;
           if (e.isIntersecting && e.intersectionRatio >= 0.6){
+            vid.muted = cpMuted;
             var p = vid.play(); if (p && p.catch) p.catch(function(){}); s.classList.remove('paused');
           } else { vid.pause(); }
         });
@@ -2390,12 +2456,55 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
       if (io){ io.disconnect(); io = null; }
       [].forEach.call(feedEl.querySelectorAll('video'), function(v){ v.pause(); });
     }
+
+    /* Zeitleiste je Slide: Fortschritt anzeigen + zum Spulen ziehen */
+    [].forEach.call(feedEl.querySelectorAll('.cp-slide'), function(s){
+      var vid = s.querySelector('video'), scrub = s.querySelector('.cp-scrub');
+      var fill = s.querySelector('.cp-scrub-fill'), knob = s.querySelector('.cp-scrub-knob');
+      if (!vid || !scrub) return;
+      var scrubbing = false;
+      vid.addEventListener('timeupdate', function(){
+        if (scrubbing || !vid.duration) return;
+        var pct = vid.currentTime / vid.duration * 100;
+        fill.style.width = pct + '%'; knob.style.left = pct + '%';
+      });
+      function seekTo(clientX){
+        var r = scrub.getBoundingClientRect();
+        var x = (clientX - r.left - 8) / (r.width - 16);
+        x = Math.max(0, Math.min(1, x));
+        fill.style.width = (x * 100) + '%'; knob.style.left = (x * 100) + '%';
+        if (vid.duration) vid.currentTime = x * vid.duration;
+      }
+      scrub.addEventListener('pointerdown', function(e){ scrubbing = true; scrub.classList.add('active'); try { scrub.setPointerCapture(e.pointerId); } catch(err){} seekTo(e.clientX); e.stopPropagation(); e.preventDefault(); });
+      scrub.addEventListener('pointermove', function(e){ if (scrubbing){ seekTo(e.clientX); e.preventDefault(); } });
+      function endScrub(){ if (!scrubbing) return; scrubbing = false; scrub.classList.remove('active'); }
+      scrub.addEventListener('pointerup', endScrub);
+      scrub.addEventListener('pointercancel', endScrub);
+      scrub.addEventListener('touchstart', function(e){ e.stopPropagation(); }, { passive: true });
+      scrub.addEventListener('click', function(e){ e.stopPropagation(); });
+    });
+
+    /* Tippen = Play/Pause · Doppeltipp = Like · Buttons = ihre Aktion */
+    var lastTap = 0, tapTimer = null;
     feedEl.addEventListener('click', function(e){
-      if (e.target.closest('.cp-cta')) return;
+      if (e.target.closest('.cp-cta') || e.target.closest('.cp-scrub')) return;
+      var likeBtn = e.target.closest('.cp-like');
+      if (likeBtn){ e.stopPropagation(); tapLike(likeBtn.closest('.cp-slide')); return; }
+      var muteBtn = e.target.closest('.cp-mute');
+      if (muteBtn){ e.stopPropagation(); toggleMute(); return; }
+      var shareBtn = e.target.closest('.cp-share');
+      if (shareBtn){ e.stopPropagation(); doShare(); return; }
+      if (e.target.closest('.cp-act')) return; /* Kommentar-Zähler: keine Aktion */
       var s = e.target.closest('.cp-slide'); if (!s) return;
-      var vid = s.querySelector('video'); if (!vid) return;
-      if (vid.paused){ var p = vid.play(); if (p && p.catch) p.catch(function(){}); s.classList.remove('paused'); }
-      else { vid.pause(); s.classList.add('paused'); }
+      var now = Date.now();
+      if (now - lastTap < 280){
+        if (tapTimer){ clearTimeout(tapTimer); tapTimer = null; }
+        lastTap = 0;
+        doubleTapLike(s);
+      } else {
+        lastTap = now;
+        tapTimer = setTimeout(function(){ tapTimer = null; togglePlay(s); }, 280);
+      }
     });
     return { connect: connect, disconnect: disconnect, el: feedEl };
   }
