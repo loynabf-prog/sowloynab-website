@@ -3,146 +3,281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#100b09">
+<meta name="theme-color" content="#0d0908">
 <meta name="robots" content="noindex">
 <title>Anfrage · Sow &amp; Loynab Media</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e0521a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='26' font-weight='bold' fill='%23fff' text-anchor='middle'%3ES%26L%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#e0521a;--gold-l:#ff8a50;--text:#f5efe4}
+:root{--gold:#e0521a;--gold-l:#ff8a50;--text:#f5efe4;--muted:rgba(245,239,228,.5);--line:rgba(255,255,255,.12)}
 html{background:#0d0908}
-body{min-height:100svh;background:radial-gradient(ellipse 90% 60% at 50% 0%,rgba(224,82,26,.14),transparent 60%),linear-gradient(170deg,#140d0a 0%,#0d0908 60%,#0b0806 100%);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:2rem 1.25rem}
-.wrap{width:100%;max-width:440px;text-align:center}
-.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.01em;margin-bottom:2rem}
+body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgba(224,82,26,.10),transparent 60%),#0d0908;color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+.funnel{min-height:100svh;max-width:500px;margin:0 auto;display:flex;flex-direction:column;padding:1.25rem 1.5rem 2rem}
+/* Kopf: Progress + zurück */
+.top{display:flex;align-items:center;gap:.9rem;padding:.4rem 0 1.5rem}
+.back{width:34px;height:34px;flex-shrink:0;border:none;background:none;color:var(--muted);cursor:pointer;font-size:1.4rem;line-height:1;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:color .2s,background .2s;visibility:hidden}
+.back:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.prog{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.09);overflow:hidden}
+.prog-bar{height:100%;width:25%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:3px;transition:width .4s cubic-bezier(.22,1,.36,1)}
+.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.01em;flex-shrink:0}
 .brand em{color:var(--gold);font-style:normal}
-.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-l);margin-bottom:1.1rem}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
-h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.2rem,9vw,2.9rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1rem}
-h1 em{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--gold)}
-.sub{font-size:.95rem;line-height:1.7;color:rgba(245,239,228,.62);margin-bottom:2rem}
-form{display:flex;flex-direction:column;gap:.7rem;text-align:left}
-.fg label{display:block;font-size:.72rem;font-weight:600;color:rgba(245,239,228,.7);margin-bottom:.35rem;letter-spacing:.01em}
-.fg input[type=text]{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:.85rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:.95rem;transition:border-color .2s,background .2s}
-.fg input[type=text]:focus{outline:none;border-color:var(--gold);background:rgba(224,82,26,.06)}
-.fg input::placeholder{color:rgba(245,239,228,.3)}
-.check{display:flex;align-items:flex-start;gap:.6rem;font-size:.74rem;line-height:1.5;color:rgba(245,239,228,.55);margin-top:.2rem}
-.check input{margin-top:.15rem;accent-color:var(--gold);width:16px;height:16px;flex-shrink:0}
+/* Steps */
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1rem 0 2rem}
+.step{display:none;animation:fade .45s cubic-bezier(.22,1,.36,1)}
+.step.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.kick{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-l);margin-bottom:1rem}
+.q{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.75rem,7vw,2.35rem);line-height:1.12;letter-spacing:-.02em;margin-bottom:.6rem}
+.q-hint{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
+.q+.options{margin-top:2.2rem}
+.options{display:flex;flex-direction:column;gap:.7rem}
+.opt{width:100%;text-align:left;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:15px;padding:1.1rem 1.3rem;color:var(--text);font-family:'Inter',sans-serif;font-size:1.02rem;font-weight:500;cursor:pointer;transition:border-color .2s,background .2s,transform .1s;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.opt:hover{border-color:rgba(224,82,26,.5);background:rgba(224,82,26,.05)}
+.opt:active{transform:scale(.99)}
+.opt.sel{border-color:var(--gold);background:rgba(224,82,26,.12)}
+.opt .arw{color:var(--muted);font-size:1rem}
+.opt.sel .arw{color:var(--gold-l)}
+/* Freitext-Box */
+.other-input{margin-top:.9rem;display:flex;gap:.6rem}
+.other-input input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:13px;padding:.95rem 1.1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:1rem}
+.other-input input:focus{outline:none;border-color:var(--gold)}
+.other-input input::placeholder{color:rgba(245,239,228,.32)}
+.continue{flex-shrink:0;background:var(--gold);border:none;border-radius:13px;color:#fff;padding:0 1.2rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer}
+.err{outline:1.5px solid #cc3030 !important;border-color:#cc3030 !important}
+/* Kontakt */
+.field{margin-bottom:.8rem}
+.field label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:.35rem}
+.field input[type=text]{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:13px;padding:.95rem 1.1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:1rem}
+.field input:focus{outline:none;border-color:var(--gold)}
+.field input::placeholder{color:rgba(245,239,228,.3)}
+.check{display:flex;align-items:flex-start;gap:.6rem;font-size:.78rem;line-height:1.5;color:var(--muted);margin:1rem 0 1.4rem}
+.check input{margin-top:.15rem;accent-color:var(--gold);width:17px;height:17px;flex-shrink:0}
 .check a{color:var(--gold-l);text-decoration:none}
-.btn-primary{margin-top:.6rem;background:linear-gradient(105deg,var(--gold),var(--gold-l) 55%,var(--gold));background-size:200% auto;color:#fff;border:none;border-radius:100px;padding:1rem 1.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 6px 24px rgba(224,82,26,.4);transition:transform .2s,box-shadow .2s}
+.btn-primary{width:100%;background:linear-gradient(105deg,var(--gold),var(--gold-l) 55%,var(--gold));background-size:200% auto;color:#fff;border:none;border-radius:100px;padding:1.05rem 1.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.02rem;cursor:pointer;box-shadow:0 6px 24px rgba(224,82,26,.4);transition:transform .2s,box-shadow .2s}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(224,82,26,.55)}
-.btn-primary:disabled{opacity:.6;cursor:default;transform:none}
-.or{display:flex;align-items:center;gap:.8rem;margin:1.3rem 0;color:rgba(245,239,228,.3);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
-.or::before,.or::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
-.btn-wa{display:flex;align-items:center;justify-content:center;gap:.55rem;background:#25D366;color:#fff;text-decoration:none;border-radius:100px;padding:.9rem 1.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.95rem;box-shadow:0 4px 18px rgba(37,211,102,.35);transition:transform .2s}
-.btn-wa:hover{transform:translateY(-2px)}
-.btn-wa svg{width:20px;height:20px;fill:#fff}
-.trust{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem 1.1rem;margin-top:1.6rem;font-size:.72rem;color:rgba(245,239,228,.45)}
-.err{outline:1.5px solid #cc3030!important}
-.thankyou{display:none;text-align:center}
-.thankyou.show{display:block}
-.thankyou .ring{width:72px;height:72px;border-radius:50%;background:rgba(224,82,26,.15);border:1px solid rgba(224,82,26,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem;color:var(--gold-l)}
-.thankyou h2{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;margin-bottom:.8rem}
-.thankyou p{color:rgba(245,239,228,.62);line-height:1.7}
-.sig{margin-top:2rem;font-size:.78rem;color:rgba(245,239,228,.4)}
-.sig b{color:var(--text);font-weight:600}
+.btn-primary:disabled{opacity:.6;transform:none}
+.wa-alt{display:block;text-align:center;margin-top:1.1rem;color:var(--muted);font-size:.85rem;text-decoration:none}
+.wa-alt b{color:#25D366;font-weight:600}
+.summary{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:.82rem;color:var(--muted);line-height:1.7}
+.summary b{color:var(--text);font-weight:600}
+/* Danke */
+.thanks{display:none;text-align:center;margin:auto 0}
+.thanks.active{display:block;animation:fade .5s ease}
+.ring{width:74px;height:74px;border-radius:50%;background:rgba(224,82,26,.14);border:1px solid rgba(224,82,26,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem;color:var(--gold-l)}
+.thanks h2{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;margin-bottom:.8rem}
+.thanks p{color:var(--muted);line-height:1.7;max-width:360px;margin:0 auto}
+.sig{margin-top:1.6rem;font-size:.8rem;color:var(--muted)}
+.sig b{color:var(--text)}
+.foot{text-align:center;font-size:.72rem;color:rgba(245,239,228,.32);padding-top:1rem}
 </style>
 </head>
 <body>
-  <div class="wrap">
+<div class="funnel">
+  <div class="top">
+    <button class="back" id="back" aria-label="Zurück">&larr;</button>
+    <div class="prog"><div class="prog-bar" id="bar"></div></div>
     <div class="brand">Sow <em>&amp;</em> Loynab</div>
+  </div>
 
-    <div id="form-view">
-      <span class="eyebrow"><span class="dot"></span>Über 2 Mio. Views für Münsters Gastronomie</span>
-      <h1>Volle Tische.<br><em>Jeden Abend.</em></h1>
-      <p class="sub">Sichere dir deinen Platz auf der Warteliste. Drei kurze Angaben — wir melden uns innerhalb von 24&nbsp;Stunden. Kostenlos &amp; unverbindlich.</p>
+  <div class="stage">
 
-      <form id="funnel-form" novalidate>
-        <div class="fg"><label for="f-name">Dein Name</label><input type="text" id="f-name" name="name" placeholder="Max Mustermann"></div>
-        <div class="fg"><label for="f-lokal">Name deines Lokals</label><input type="text" id="f-lokal" name="lokal" placeholder="z. B. Café Münster"></div>
-        <div class="fg"><label for="f-kontakt">E-Mail oder Telefon</label><input type="text" id="f-kontakt" name="kontakt" placeholder="hallo@deinlokal.de oder 0151 …"></div>
-        <label class="check"><input type="checkbox" id="f-dsgvo"><span>Ich stimme zu, dass meine Angaben zur Kontaktaufnahme gespeichert werden. (<a href="index.html" target="_blank" rel="noopener">Datenschutz</a>)</span></label>
+    <!-- FRAGE 1 -->
+    <section class="step active" data-step="0">
+      <div class="kick">Frage 1 von 4</div>
+      <h2 class="q">Was betreibst du?</h2>
+      <div class="options">
+        <button class="opt" data-q="branche" data-v="Gastronomie">Gastronomie <span class="arw">→</span></button>
+        <button class="opt" data-q="branche" data-v="Andere Branche" data-ask="Welche Branche?" data-prefix="">Andere Branche <span class="arw">→</span></button>
+      </div>
+      <div class="other-input" hidden><input type="text"><button class="continue">Weiter</button></div>
+    </section>
+
+    <!-- FRAGE 2 -->
+    <section class="step" data-step="1">
+      <div class="kick">Frage 2 von 4</div>
+      <h2 class="q">Wo ist dein Laden?</h2>
+      <div class="q-hint">Mehrere Standorte? Nimm den, der Münster am nächsten ist.</div>
+      <div class="options">
+        <button class="opt" data-q="standort" data-v="Münster">Münster <span class="arw">→</span></button>
+        <button class="opt" data-q="standort" data-v="In NRW" data-ask="In welcher Stadt?" data-prefix="NRW – ">In NRW <span class="arw">→</span></button>
+        <button class="opt" data-q="standort" data-v="Außerhalb" data-ask="In welcher Stadt?" data-prefix="Außerhalb – ">Außerhalb <span class="arw">→</span></button>
+      </div>
+      <div class="other-input" hidden><input type="text"><button class="continue">Weiter</button></div>
+    </section>
+
+    <!-- FRAGE 3 -->
+    <section class="step" data-step="2">
+      <div class="kick">Frage 3 von 4</div>
+      <h2 class="q">Machst du aktuell schon Social Media für deinen Laden?</h2>
+      <div class="options">
+        <button class="opt" data-q="social" data-v="Ja, mit einer Agentur">Ja, mit einer Agentur <span class="arw">→</span></button>
+        <button class="opt" data-q="social" data-v="Ja, selbst / mit dem Team">Ja, selbst / mit dem Team <span class="arw">→</span></button>
+        <button class="opt" data-q="social" data-v="Nein, noch nicht richtig">Nein, noch nicht richtig <span class="arw">→</span></button>
+      </div>
+      <div class="other-input" hidden><input type="text"><button class="continue">Weiter</button></div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section class="step" data-step="3">
+      <div class="kick">Fast geschafft</div>
+      <h2 class="q">Wohin dürfen wir dir antworten?</h2>
+      <div class="summary" id="summary"></div>
+      <form id="contact-form" novalidate>
+        <div class="field"><label for="c-name">Dein Name</label><input type="text" id="c-name" placeholder="Max Mustermann"></div>
+        <div class="field"><label for="c-lokal">Name deines Lokals</label><input type="text" id="c-lokal" placeholder="z. B. Café Münster"></div>
+        <div class="field"><label for="c-kontakt">E-Mail oder Telefon</label><input type="text" id="c-kontakt" placeholder="hallo@deinlokal.de oder 0151 …"></div>
+        <label class="check"><input type="checkbox" id="c-dsgvo"><span>Ich stimme zu, dass meine Angaben zur Kontaktaufnahme gespeichert werden. (<a href="index.html" target="_blank" rel="noopener">Datenschutz</a>)</span></label>
         <button type="submit" class="btn-primary" id="submit-btn">Auf die Warteliste →</button>
       </form>
+      <a class="wa-alt" id="wa-alt" href="#">oder direkt <b>per WhatsApp schreiben →</b></a>
+    </section>
 
-      <div class="or">oder</div>
-      <a class="btn-wa" id="wa-btn" href="#">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Direkt per WhatsApp schreiben
-      </a>
-
-      <div class="trust"><span>✓ Antwort in 24&nbsp;h</span><span>✓ Kein Vertrag</span><span>✓ 100&nbsp;% kostenlos</span></div>
-      <div class="sig">Wir lesen jede Anfrage selbst — <b>Fassie &amp; Lion</b> aus Münster</div>
-    </div>
-
-    <div class="thankyou" id="thankyou">
-      <div class="ring">✓</div>
-      <h2>Du stehst auf der Liste.</h2>
-      <p>Deine Anfrage ist bei uns gelandet. Wir schauen uns deinen Laden persönlich an und melden uns innerhalb von 24&nbsp;Stunden. Bis gleich!</p>
-      <div class="sig">— <b>Fassie &amp; Lion</b></div>
-    </div>
   </div>
+
+  <!-- DANKE -->
+  <div class="thanks" id="thanks">
+    <div class="ring">✓</div>
+    <h2>Du stehst auf der Liste.</h2>
+    <p>Deine Anfrage ist bei uns. Wir schauen uns deinen Laden persönlich an und melden uns innerhalb von 24&nbsp;Stunden.</p>
+    <div class="sig">— <b>Fassie &amp; Lion</b> aus Münster</div>
+  </div>
+
+  <div class="foot">Kostenlos &amp; unverbindlich · Antwort in 24&nbsp;h</div>
+</div>
 
 <script>
 (function(){
-  /* ===== KONFIG ===== */
   var FORMSPREE = 'https://formspree.io/f/mkodlooe';
-  var WA_NUMBER = '491758775258';
+  var WA = '491758775258';
+  var state = {};
+  var steps = [].slice.call(document.querySelectorAll('.step[data-step]'));
+  var total = steps.length;
+  var cur = 0;
+  var bar = document.getElementById('bar');
+  var back = document.getElementById('back');
+  var thanks = document.getElementById('thanks');
 
-  var form = document.getElementById('funnel-form');
+  function render(){
+    steps.forEach(function(s,i){ s.classList.toggle('active', i===cur); });
+    bar.style.width = ((cur+1)/total*100) + '%';
+    back.style.visibility = cur>0 ? 'visible' : 'hidden';
+    if(cur===total-1) buildSummary();
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+  function next(){ if(cur<total-1){ cur++; render(); } }
+  function prev(){ if(cur>0){ cur--; render(); } }
+  back.addEventListener('click', prev);
+
+  document.querySelectorAll('.opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var step = btn.closest('.step');
+      step.querySelectorAll('.opt').forEach(function(b){ b.classList.remove('sel'); });
+      btn.classList.add('sel');
+      var q = btn.dataset.q;
+      var box = step.querySelector('.other-input');
+      if(btn.dataset.ask){
+        var inp = box.querySelector('input');
+        inp.placeholder = btn.dataset.ask;
+        inp.value = '';
+        box.hidden = false;
+        box.dataset.q = q;
+        box.dataset.prefix = btn.dataset.prefix || '';
+        box.dataset.fallback = btn.dataset.v;
+        inp.focus();
+      } else {
+        if(box) box.hidden = true;
+        state[q] = btn.dataset.v;
+        setTimeout(next, 200);
+      }
+    });
+  });
+
+  document.querySelectorAll('.other-input .continue').forEach(function(c){
+    c.addEventListener('click', function(){
+      var box = c.closest('.other-input');
+      var inp = box.querySelector('input');
+      var txt = inp.value.trim();
+      if(!txt){ inp.classList.add('err'); setTimeout(function(){ inp.classList.remove('err'); }, 2000); return; }
+      state[box.dataset.q] = (box.dataset.prefix || '') + txt;
+      box.hidden = true;
+      setTimeout(next, 150);
+    });
+  });
+  document.querySelectorAll('.other-input input').forEach(function(inp){
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); inp.closest('.other-input').querySelector('.continue').click(); } });
+  });
+
+  function buildSummary(){
+    var s = document.getElementById('summary');
+    s.innerHTML = '<b>Branche:</b> ' + (state.branche||'–') + '<br><b>Standort:</b> ' + (state.standort||'–') + '<br><b>Social Media:</b> ' + (state.social||'–');
+  }
+
+  var name = document.getElementById('c-name');
+  var lokal = document.getElementById('c-lokal');
+  var kontakt = document.getElementById('c-kontakt');
+  var dsgvo = document.getElementById('c-dsgvo');
+  var form = document.getElementById('contact-form');
   var btn = document.getElementById('submit-btn');
-  var waBtn = document.getElementById('wa-btn');
-  var name = document.getElementById('f-name');
-  var lokal = document.getElementById('f-lokal');
-  var kontakt = document.getElementById('f-kontakt');
-  var dsgvo = document.getElementById('f-dsgvo');
 
-  function flag(el){ el.classList.add('err'); setTimeout(function(){ el.classList.remove('err'); }, 2500); }
-  function valid(){
+  function flag(el){ el.classList.add('err'); setTimeout(function(){ el.classList.remove('err'); }, 2200); }
+  function validContact(){
     var ok = true;
     if(!name.value.trim()){ flag(name); ok=false; }
     if(!lokal.value.trim()){ flag(lokal); ok=false; }
     if(!kontakt.value.trim()){ flag(kontakt); ok=false; }
     return ok;
   }
-  function showThanks(){
-    document.getElementById('form-view').style.display='none';
-    document.getElementById('thankyou').classList.add('show');
-  }
   function waLink(){
-    var msg = 'Hallo Fassie & Lion! ';
-    if(name.value.trim()) msg += 'Ich bin '+name.value.trim()+'. ';
-    if(lokal.value.trim()) msg += 'Mein Lokal: '+lokal.value.trim()+'. ';
-    msg += 'Ich möchte auf die Warteliste.';
-    if(kontakt.value.trim()) msg += ' Kontakt: '+kontakt.value.trim();
-    return 'https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(msg);
+    var m = 'Hallo Fassie & Lion! ';
+    if(name.value.trim()) m += 'Ich bin ' + name.value.trim() + '. ';
+    if(lokal.value.trim()) m += 'Lokal: ' + lokal.value.trim() + '. ';
+    m += 'Branche: ' + (state.branche||'-') + ' · Standort: ' + (state.standort||'-') + ' · Social Media: ' + (state.social||'-') + '. ';
+    m += 'Ich möchte auf die Warteliste.';
+    if(kontakt.value.trim()) m += ' Kontakt: ' + kontakt.value.trim();
+    return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(m);
   }
 
-  waBtn.addEventListener('click', function(e){
+  function done(){
+    steps.forEach(function(s){ s.classList.remove('active'); });
+    document.querySelector('.stage').style.display = 'none';
+    bar.style.width = '100%';
+    back.style.visibility = 'hidden';
+    thanks.classList.add('active');
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
+
+  document.getElementById('wa-alt').addEventListener('click', function(e){
     e.preventDefault();
+    if(!validContact()) return;
     window.open(waLink(), '_blank', 'noopener');
+    done();
   });
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    if(!valid()) return;
+    if(!validContact()) return;
     if(!dsgvo.checked){ flag(dsgvo.parentElement); return; }
-    /* Fallback: solange kein Formspree-Endpunkt gesetzt ist, direkt WhatsApp öffnen (kein Lead geht verloren) */
-    if(FORMSPREE.indexOf('DEIN_ENDPUNKT')!==-1){
-      window.open(waLink(), '_blank', 'noopener');
-      showThanks();
-      return;
+    if(FORMSPREE.indexOf('/f/')===-1 || FORMSPREE.indexOf('DEIN_ENDPUNKT')!==-1){
+      window.open(waLink(), '_blank', 'noopener'); done(); return;
     }
     btn.disabled = true; btn.textContent = 'Wird gesendet …';
-    fetch(FORMSPREE, {
-      method:'POST',
-      headers:{'Accept':'application/json'},
-      body:new FormData(form)
-    }).then(function(r){ showThanks(); })
-      .catch(function(){ /* Notfall: WhatsApp */ window.open(waLink(),'_blank','noopener'); showThanks(); });
+    var fd = new FormData();
+    fd.append('Branche', state.branche || '');
+    fd.append('Standort', state.standort || '');
+    fd.append('Social Media', state.social || '');
+    fd.append('Name', name.value.trim());
+    fd.append('Lokal', lokal.value.trim());
+    fd.append('Kontakt', kontakt.value.trim());
+    fd.append('_subject', 'Neue Warteliste-Anfrage: ' + (lokal.value.trim() || name.value.trim()));
+    fetch(FORMSPREE, { method:'POST', headers:{'Accept':'application/json'}, body: fd })
+      .then(function(){ done(); })
+      .catch(function(){ window.open(waLink(),'_blank','noopener'); done(); });
   });
+
+  render();
 })();
 </script>
 </body>
