@@ -443,7 +443,9 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cpx-head { display: flex; justify-content: center; max-width: 94vw; }
 .cpx-tabs { position: static; background: none; padding: 0; gap: 1.25rem; flex-wrap: wrap; }
 .cpx-tabs .cp-tab { font-size: .82rem; padding: 4px 2px; }
-.cpx-device { position: relative; height: min(78vh, 740px); aspect-ratio: 9 / 19.5; max-width: 94vw; border-radius: 36px; overflow: hidden; background: #000; box-shadow: 0 30px 90px rgba(0,0,0,.65), 0 0 0 5px #1a1410, 0 0 0 6px rgba(224,82,26,.22); }
+.cpx-device { position: relative; height: min(78vh, 740px); aspect-ratio: 9 / 19.5; max-width: 94vw; border-radius: 36px; overflow: hidden; background: #000; box-shadow: 0 30px 90px rgba(0,0,0,.65), 0 0 0 5px #1a1410, 0 0 0 6px rgba(224,82,26,.22); transform-origin: center center; will-change: transform, opacity; }
+.cp-fab.cp-fab-pulse { animation: cpFabPulse .45s ease; }
+@keyframes cpFabPulse { 0% { transform: scale(1); } 40% { transform: scale(1.22); box-shadow: 0 10px 30px rgba(224,82,26,.7); } 100% { transform: scale(1); } }
 .cpx-track { display: flex; height: 100%; width: 100%; transition: transform .42s cubic-bezier(.22,1,.36,1); will-change: transform; }
 .cpx-panel { flex: 0 0 100%; height: 100%; position: relative; }
 .cpx-swipehint { font-size: .62rem; letter-spacing: .06em; color: rgba(245,239,228,.4); }
@@ -2444,8 +2446,30 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   }
 
   var previewFeed = null;
+
+  /* Transform, der das Phone auf den Content-Button (FAB) zusammenzieht —
+     Grundlage der "rein-/rausrutschen"-Animation. */
+  function collapseTransform(){
+    var dev = cpx && cpx.querySelector('.cpx-device');
+    var fab = document.getElementById('cp-fab');
+    if (!dev || !fab) return 'scale(.05)';
+    var dr = dev.getBoundingClientRect(), fr = fab.getBoundingClientRect();
+    var dx = (fr.left + fr.width / 2) - (dr.left + dr.width / 2);
+    var dy = (fr.top + fr.height / 2) - (dr.top + dr.height / 2);
+    return 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(.04)';
+  }
+  function pulseFab(){
+    var fab = document.getElementById('cp-fab');
+    if (!fab || prefersReduced) return;
+    fab.classList.remove('cp-fab-pulse');
+    void fab.offsetWidth;
+    fab.classList.add('cp-fab-pulse');
+  }
+  var closeTimer = null;
+
   function openApp(i){
     if (!cpx) return;
+    if (closeTimer){ clearTimeout(closeTimer); closeTimer = null; }
     buildApp();
     pauseAllExcept(cpx);
     cpx.classList.add('open');
@@ -2453,16 +2477,43 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     activate(i || 0);
+    pulseFab();
+    var dev = cpx.querySelector('.cpx-device');
+    if (dev && !prefersReduced){
+      dev.style.transition = 'none';
+      dev.style.transform = collapseTransform();
+      dev.style.opacity = '0';
+      void dev.offsetWidth; /* Reflow, damit der Startzustand greift */
+      requestAnimationFrame(function(){
+        dev.style.transition = 'transform .5s cubic-bezier(.34,1.36,.5,1), opacity .32s ease';
+        dev.style.transform = 'none';
+        dev.style.opacity = '1';
+      });
+    } else if (dev){ dev.style.transform = 'none'; dev.style.opacity = '1'; }
   }
   function closeApp(){
     if (!cpx) return;
-    cpx.classList.remove('open');
-    cpx.setAttribute('aria-hidden', 'true');
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    appFeeds.forEach(function(f){ f.disconnect(); });
-    if (previewFeed && previewFeed.el){ previewFeed.el.scrollTop = 0; previewFeed.connect(); }
-    try{ if (location.search.indexOf('cp=') !== -1 || location.hash === '#phone') history.replaceState(null, document.title, location.pathname); }catch(e){}
+    pulseFab();
+    var dev = cpx.querySelector('.cpx-device');
+    var finish = function(){
+      cpx.classList.remove('open');
+      cpx.setAttribute('aria-hidden', 'true');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      appFeeds.forEach(function(f){ f.disconnect(); });
+      if (previewFeed && previewFeed.el){ previewFeed.el.scrollTop = 0; previewFeed.connect(); }
+      if (dev){ dev.style.transition = 'none'; dev.style.transform = 'none'; dev.style.opacity = ''; }
+      try{ if (location.search.indexOf('cp=') !== -1 || location.hash === '#phone') history.replaceState(null, document.title, location.pathname); }catch(e){}
+    };
+    if (dev && !prefersReduced){
+      cpx.style.pointerEvents = 'none';
+      dev.style.transition = 'transform .42s cubic-bezier(.5,.1,.75,.2), opacity .4s ease';
+      dev.style.transform = collapseTransform();
+      dev.style.opacity = '0';
+      closeTimer = setTimeout(function(){ cpx.style.pointerEvents = ''; finish(); }, 430);
+    } else {
+      finish();
+    }
   }
   if (cpxClose) cpxClose.addEventListener('click', closeApp);
   if (cpx) cpx.addEventListener('click', function(e){ if (e.target === cpx) closeApp(); });
