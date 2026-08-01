@@ -2579,30 +2579,51 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 })();
 
-/* ── MARQUEE: reagiert auf Scroll-Geschwindigkeit ── */
+/* ── MARQUEE: konstantes Tempo + per Finger/Maus ziehbar ── */
 (function(){
   var track = document.querySelector('.marquee-track');
-  if(!track || prefersReduced) return;
+  if(!track) return;
   var group = track.querySelector('.marquee-group');
   if(!group) return;
   track.style.animation = 'none';
   track.style.willChange = 'transform';
-  var groupW = group.getBoundingClientRect().width;
-  var pos = 0, base = 1.4, boost = 0, lastY = window.pageYOffset || 0;
-  window.addEventListener('scroll', function(){
-    var y = window.pageYOffset || 0;
-    boost = Math.min(boost + Math.abs(y - lastY) * 0.28, 26);
-    lastY = y;
-  }, { passive:true });
-  window.addEventListener('resize', function(){ groupW = group.getBoundingClientRect().width; });
-  function frame(){
-    boost *= 0.9;
-    pos -= (base + boost);
-    if(-pos >= groupW) pos += groupW;
-    track.style.transform = 'translateX(' + pos.toFixed(1) + 'px)';
+  var offset = 0, gw = 0, last = 0, dragging = false, startX = 0, startOffset = 0;
+  function measure(){ gw = group.getBoundingClientRect().width; }
+  measure();
+  setTimeout(measure, 600); /* nach Font-Load nochmal messen */
+  window.addEventListener('resize', measure, { passive:true });
+  function wrap(){
+    if(gw <= 0) return;
+    while(offset <= -gw) offset += gw;
+    while(offset > 0) offset -= gw;
+  }
+  function apply(){ track.style.transform = 'translateX(' + offset.toFixed(1) + 'px)'; }
+  function frame(t){
+    if(!last) last = t;
+    var dt = t - last; last = t;
+    if(!dragging && !prefersReduced && gw > 0){
+      offset -= (gw / 32000) * dt; /* 32s pro Gruppe = ruhiges Originaltempo, unabhängig vom Scrollen */
+      wrap(); apply();
+    }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  /* Ziehen in beide Richtungen, beim Loslassen läuft es normal weiter */
+  var marquee = track.closest('.marquee') || track;
+  marquee.style.cursor = 'grab';
+  marquee.style.touchAction = 'pan-y'; /* vertikales Seiten-Scrollen bleibt, horizontal = ziehen */
+  marquee.addEventListener('pointerdown', function(e){
+    dragging = true; startX = e.clientX; startOffset = offset; marquee.style.cursor = 'grabbing';
+  });
+  window.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    offset = startOffset + (e.clientX - startX);
+    wrap(); apply();
+  });
+  function endDrag(){ if(!dragging) return; dragging = false; last = 0; marquee.style.cursor = 'grab'; }
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
 })();
 
 /* ── SMOOTH ANCHOR SCROLL ── */
