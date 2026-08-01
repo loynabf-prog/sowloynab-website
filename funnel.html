@@ -30,6 +30,8 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
 .step.active{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .kick{font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-l);margin-bottom:1rem}
+.team-photo{width:104px;height:104px;border-radius:50%;background-image:url('team.jpg');background-size:140%;background-position:50% 22%;margin:0 auto 1rem;box-shadow:0 6px 22px rgba(0,0,0,.45),0 0 0 3px rgba(224,82,26,.28)}
+.trust-line{text-align:center;font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.03em;color:var(--gold-l);margin-bottom:2rem}
 .q{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.75rem,7vw,2.35rem);line-height:1.12;letter-spacing:-.02em;margin-bottom:.6rem}
 .q-hint{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
 .q+.options{margin-top:2.2rem}
@@ -91,6 +93,8 @@ body{min-height:100svh;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgb
 
     <!-- FRAGE 1 -->
     <section class="step active" data-step="0">
+      <div class="team-photo" role="img" aria-label="Fassie und Lion aus Münster"></div>
+      <div class="trust-line">● Über 2 Mio. Views für Münsters Gastronomie</div>
       <div class="kick">Frage 1 von 3</div>
       <h2 class="q">Was betreibst du?</h2>
       <div class="options">
