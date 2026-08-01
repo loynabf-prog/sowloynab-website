@@ -2053,8 +2053,7 @@ function submitQ(e) {
     document.getElementById('qs-thanks').classList.add('active');
     trackEvent('quiz_complete', { lokal: lokal.value.trim() });
   }
-  var body = new URLSearchParams(new FormData(form)).toString();
-  fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
+  fetch('https://formspree.io/f/mkodlooe', { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
     .then(showThanks)
     .catch(showThanks);
   return false;
