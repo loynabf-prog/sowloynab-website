@@ -1068,6 +1068,7 @@ section[id], #hero { scroll-margin-top: 90px; }
   #hero.hero-in .hd8 { transition-delay: .68s; }
 }
 </style>
+<script defer src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
 </head>
 <body>
 
@@ -2361,7 +2362,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
       { cap: 'Warum plötzlich alle herkommen', likes: '3.2k', views: '41k', comments: '38' }
     ]},
     { name: 'Schleckofatz', handle: 'schleckofatz', videos: [
-      { cap: 'Neueröffnung — Tag 1 🍦', likes: '4.2k', views: '88k', comments: '61' },
+      { cap: 'Neueröffnung — Tag 1 🍦', likes: '4.2k', views: '88k', comments: '61', bunny: { host: 'vz-f999b65a-f22.b-cdn.net', id: '060d4295-8fb3-4c56-b203-26984108b90c' } },
       { cap: 'Reality-Format · Folge 1', likes: '3.3k', views: '44k', comments: '52' },
       { cap: 'Bowls & Eis unter einem Dach', likes: '2.1k', views: '31k', comments: '29' },
       { cap: 'Der Sommer-Hit in der City', likes: '1.8k', views: '24k', comments: '22' }
@@ -2381,9 +2382,19 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   var SPK_ON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.3 5.7a9 9 0 0 1 0 12.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
   var SPK_OFF = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M16 9.5l5.5 5M21.5 9.5l-5.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 
+  function videoTag(v){
+    if (v.bunny && v.bunny.host && v.bunny.id){
+      var base = 'https://' + v.bunny.host + '/' + v.bunny.id;
+      /* HLS-Adresse per data-hls; hls.js/Safari haengt sie beim ersten Abspielen an.
+         poster = Vorschaubild von Bunny, sofort sichtbar bevor das Video laedt. */
+      return '<video muted loop playsinline preload="none" data-hls="' + base + '/playlist.m3u8" poster="' + base + '/thumbnail.jpg"></video>';
+    }
+    return '<video muted loop playsinline preload="none"><source src="' + (v.src || 'hero.mp4') + '" type="video/mp4"></video>';
+  }
+
   function slide(v, c){
     return '<div class="cp-slide paused" data-liked="0">'
-      + '<video muted loop playsinline preload="none"><source src="' + (v.src || 'hero.mp4') + '" type="video/mp4"></video>'
+      + videoTag(v)
       + '<div class="cp-grad"></div><div class="cp-play">' + PLAY + '</div>'
       + '<div class="cp-like-burst">' + HEART + '</div>'
       + '<button type="button" class="cp-mute" aria-label="Ton an/aus">' + SPK_OFF + '</button>'
@@ -2429,9 +2440,26 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     if (navigator.share) { navigator.share({ title: document.title, url: url }).catch(function(){}); }
     else if (navigator.clipboard) { navigator.clipboard.writeText(url).catch(function(){}); }
   }
+  /* HLS beim ersten Abspielen anhaengen (adaptiv, spart Daten bei schlechtem Netz) */
+  function ensureSource(vid){
+    if (!vid || vid.getAttribute('data-hls-loaded') === '1') return;
+    var url = vid.getAttribute('data-hls');
+    if (!url) return; /* MP4-Platzhalter: nichts zu tun */
+    if (window.Hls && window.Hls.isSupported()){
+      vid.setAttribute('data-hls-loaded', '1');
+      var hls = new window.Hls({ enableWorker: true, capLevelToPlayerSize: true });
+      hls.loadSource(url);
+      hls.attachMedia(vid);
+      vid._hls = hls;
+    } else if (vid.canPlayType('application/vnd.apple.mpegurl')){
+      vid.setAttribute('data-hls-loaded', '1');
+      vid.src = url; /* Safari spielt HLS nativ */
+    }
+    /* sonst: hls.js noch nicht geladen -> Markierung offen lassen, spaeter erneut versuchen */
+  }
   function togglePlay(slideEl){
     var vid = slideEl.querySelector('video'); if (!vid) return;
-    if (vid.paused) { vid.muted = cpMuted; var p = vid.play(); if (p && p.catch) p.catch(function(){}); slideEl.classList.remove('paused'); }
+    if (vid.paused) { ensureSource(vid); vid.muted = cpMuted; var p = vid.play(); if (p && p.catch) p.catch(function(){}); slideEl.classList.remove('paused'); }
     else { vid.pause(); slideEl.classList.add('paused'); }
   }
 
@@ -2445,6 +2473,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
         entries.forEach(function(e){
           var s = e.target, vid = s.querySelector('video'); if (!vid) return;
           if (e.isIntersecting && e.intersectionRatio >= 0.6){
+            ensureSource(vid);
             vid.muted = cpMuted;
             var p = vid.play(); if (p && p.catch) p.catch(function(){}); s.classList.remove('paused');
           } else { vid.pause(); }
