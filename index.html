@@ -454,6 +454,14 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cp-scrub-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #fff; border-radius: 3px; }
 .cp-scrub-knob { position: absolute; top: 50%; left: 0; width: 13px; height: 13px; border-radius: 50%; background: #fff; transform: translate(-50%,-50%) scale(0); transition: transform .15s ease; box-shadow: 0 1px 5px rgba(0,0,0,.5); }
 .cp-scrub.active .cp-scrub-knob { transform: translate(-50%,-50%) scale(1); }
+/* iOS: echte HLS-Videos rendern in einer Hardware-Ebene, die HTML verdecken kann.
+   Bedien-Ebenen in eigene Compositing-Layer zwingen -> liegen wieder ueber dem Video. */
+.cp-grad, .cp-play, .cp-like-burst, .cp-mute, .cp-rail, .cp-meta, .cp-scrub, .cp-scrubtime { -webkit-transform: translateZ(0); transform: translateZ(0); }
+/* Zeitanzeige beim Spulen (nur sichtbar waehrend man die Timeline zieht) */
+.cp-scrubtime { position: absolute; left: 0; right: 0; top: 44%; z-index: 8; text-align: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.6rem; color: rgba(255,255,255,.5); letter-spacing: .02em; opacity: 0; pointer-events: none; transition: opacity .15s ease; text-shadow: 0 2px 14px rgba(0,0,0,.65); }
+.cp-scrubtime .cp-t-cur { color: #fff; }
+.cp-slide.scrubbing .cp-scrubtime { opacity: 1; }
+.cpx .cp-scrubtime { font-size: 2.1rem; }
 /* ── Vollbild Content Phone ── */
 .cpx { position: fixed; inset: 0; z-index: 3000; background: rgba(8,6,5,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 58px 12px 18px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .35s ease, visibility .35s ease, background .28s ease, backdrop-filter .28s ease; }
 .cpx.open { opacity: 1; visibility: visible; pointer-events: auto; }
@@ -2403,6 +2411,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
         + '<div class="cp-act">' + COMMENT + '<span>' + v.comments + '</span></div>'
         + '<button type="button" class="cp-act cp-share" aria-label="Teilen">' + SHARE + '<span>Teilen</span></button></div>'
       + '<div class="cp-meta"><div class="cp-handle">@' + c.handle + '</div><div class="cp-cap">' + v.cap + '</div><div class="cp-views">' + v.views + ' Views</div></div>'
+      + '<div class="cp-scrubtime"><span class="cp-t-cur">0:00</span> / <span class="cp-t-dur">0:00</span></div>'
       + '<div class="cp-scrub"><div class="cp-scrub-track"><div class="cp-scrub-fill"></div><div class="cp-scrub-knob"></div></div></div>'
       + '</div>';
   }
@@ -2490,8 +2499,10 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     [].forEach.call(feedEl.querySelectorAll('.cp-slide'), function(s){
       var vid = s.querySelector('video'), scrub = s.querySelector('.cp-scrub');
       var fill = s.querySelector('.cp-scrub-fill'), knob = s.querySelector('.cp-scrub-knob');
+      var tCur = s.querySelector('.cp-t-cur'), tDur = s.querySelector('.cp-t-dur');
       if (!vid || !scrub) return;
       var scrubbing = false;
+      function fmtTime(t){ t = Math.max(0, t | 0); var m = (t / 60) | 0, sec = t % 60; return m + ':' + (sec < 10 ? '0' : '') + sec; }
       vid.addEventListener('timeupdate', function(){
         if (scrubbing || !vid.duration) return;
         var pct = vid.currentTime / vid.duration * 100;
@@ -2502,11 +2513,11 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
         var x = (clientX - r.left - 8) / (r.width - 16);
         x = Math.max(0, Math.min(1, x));
         fill.style.width = (x * 100) + '%'; knob.style.left = (x * 100) + '%';
-        if (vid.duration) vid.currentTime = x * vid.duration;
+        if (vid.duration){ vid.currentTime = x * vid.duration; if (tCur) tCur.textContent = fmtTime(x * vid.duration); if (tDur) tDur.textContent = fmtTime(vid.duration); }
       }
-      scrub.addEventListener('pointerdown', function(e){ scrubbing = true; scrub.classList.add('active'); try { scrub.setPointerCapture(e.pointerId); } catch(err){} seekTo(e.clientX); e.stopPropagation(); e.preventDefault(); });
+      scrub.addEventListener('pointerdown', function(e){ scrubbing = true; scrub.classList.add('active'); s.classList.add('scrubbing'); if (tDur && vid.duration) tDur.textContent = fmtTime(vid.duration); try { scrub.setPointerCapture(e.pointerId); } catch(err){} seekTo(e.clientX); e.stopPropagation(); e.preventDefault(); });
       scrub.addEventListener('pointermove', function(e){ if (scrubbing){ seekTo(e.clientX); e.preventDefault(); } });
-      function endScrub(){ if (!scrubbing) return; scrubbing = false; scrub.classList.remove('active'); }
+      function endScrub(){ if (!scrubbing) return; scrubbing = false; scrub.classList.remove('active'); s.classList.remove('scrubbing'); }
       scrub.addEventListener('pointerup', endScrub);
       scrub.addEventListener('pointercancel', endScrub);
       scrub.addEventListener('touchstart', function(e){ e.stopPropagation(); }, { passive: true });
