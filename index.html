@@ -76,25 +76,11 @@
 }
 </script>
 
-<!-- Google Analytics 4 — Eure Tracking-ID hier einsetzen -->
+<!-- Kein externes Tracking / kein Google Analytics. trackEvent bleibt als
+     No-Op erhalten, damit bestehende Aufrufe im Code nicht brechen. -->
 <script>
-window._ga_consent = false;
-function initGA() {
-  if (window._ga_consent) return;
-  window._ga_consent = true;
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
-  document.head.appendChild(s);
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  window.gtag = gtag;
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-}
-function trackEvent(name, params) {
-  if (window.gtag) gtag('event', name, params || {});
-}
+function initGA(){}
+function trackEvent(){}
 </script>
 
 <!-- FAQPage Schema — Google Rich Snippets -->
@@ -1735,14 +1721,7 @@ section[id], #hero { scroll-margin-top: 90px; }
   </div>
 </div>
 
-<!-- COOKIE BANNER -->
-<div class="cookie-banner" id="cookie-banner">
-  <p>Wir verwenden Cookies und Google Analytics, um unsere Website zu verbessern und das Nutzerverhalten zu analysieren. Mit „Akzeptieren" stimmt ihr der Verwendung aller Cookies zu. Mehr Infos in unserer <button onclick="openModal('datenschutz')" style="color:var(--gold-l);background:none;border:none;text-decoration:underline;cursor:pointer;font-size:.75rem;font-family:inherit;">Datenschutzerklärung</button>.</p>
-  <div class="cookie-btns">
-    <button class="cookie-accept" onclick="acceptCookies()">Akzeptieren</button>
-    <button class="cookie-decline" onclick="declineCookies()">Nur notwendige</button>
-  </div>
-</div>
+<!-- Kein Cookie-Banner noetig: keine Analyse-/Tracking-Cookies im Einsatz. -->
 
 <!-- IMPRESSUM MODAL -->
 <div class="modal-overlay" id="modal-impressum" onclick="closeModalOutside(event,'impressum')">
@@ -1788,19 +1767,22 @@ section[id], #hero { scroll-margin-top: 90px; }
     </div>
     <div class="modal-body">
       <h3>1. Verantwortlicher</h3>
-      <p>Verantwortlich im Sinne der DSGVO ist:<br><strong>Sow &amp; Loynab Media</strong>, [Adresse], 48xxx Münster. E-Mail: hallo@sowloynab.de</p>
+      <p>Verantwortlich im Sinne der DSGVO ist:<br><strong>Sow &amp; Loynab Media GbR</strong>, Heinrich-Ebel-Str. 11, 48161 Münster. E-Mail: hallo@sowloynab.de</p>
 
       <h3>2. Erhebung und Speicherung personenbezogener Daten</h3>
       <p>Wenn ihr unser Kontaktformular (Quiz) ausfüllt, erheben wir folgende Daten: Vorname, Name des Lokals, E-Mail-Adresse, bevorzugter Kontaktweg sowie eure Antworten auf die Qualifizierungsfragen. Diese Daten werden ausschließlich zur Bearbeitung eurer Anfrage und zur Kontaktaufnahme verwendet. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung) sowie Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).</p>
 
-      <h3>3. Weitergabe von Daten</h3>
-      <p>Eine Weitergabe eurer personenbezogenen Daten an Dritte findet nur statt, wenn dies zur Vertragserfüllung erforderlich ist, ihr ausdrücklich eingewilligt habt, oder eine gesetzliche Verpflichtung besteht.</p>
+      <h3>3. Weitergabe &amp; externe Dienstleister</h3>
+      <p>Eine Weitergabe eurer personenbezogenen Daten an Dritte findet nur statt, wenn dies zur Vertragserfüllung erforderlich ist, ihr ausdrücklich eingewilligt habt, oder eine gesetzliche Verpflichtung besteht. Für den Betrieb der Website und die Bearbeitung eurer Anfrage setzen wir folgende Dienstleister ein:</p>
+      <p><strong>Formularverarbeitung – Formspree:</strong> Das Absenden des Kontaktformulars erfolgt über Formspree (Formspree Inc., USA), der die Anfrage an uns weiterleitet. Dabei werden die von euch eingegebenen Daten verarbeitet. Die Übertragung in die USA erfolgt auf Grundlage der EU-Standardvertragsklauseln. Rechtsgrundlage: Art. 6 Abs. 1 lit. b und lit. a DSGVO.</p>
+      <p><strong>Hosting – GitHub Pages:</strong> Diese Website wird bei GitHub Pages (GitHub Inc., USA) gehostet. Beim Aufruf werden technisch notwendige Server-Logdaten (u. a. IP-Adresse, Zeitpunkt, abgerufene Seite) verarbeitet, die für die sichere Bereitstellung erforderlich sind. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO; Übertragung in die USA auf Grundlage der EU-Standardvertragsklauseln.</p>
+      <p><strong>Skript-Auslieferung – jsDelivr:</strong> Für die Video-Wiedergabe im „Content Phone" wird die Programmbibliothek hls.js über das CDN jsDelivr geladen; dabei wird eure IP-Adresse an den CDN-Anbieter übertragen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (technisch fehlerfreie Bereitstellung).</p>
 
-      <h3>4. Google Analytics</h3>
-      <p>Mit eurer Einwilligung verwenden wir Google Analytics 4 (Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA). Google Analytics verwendet Cookies, die eine Analyse eurer Nutzung der Website ermöglichen. Ihr könnt die Einwilligung jederzeit widerrufen. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO. Die Datenübertragung in die USA erfolgt auf Grundlage der Standardvertragsklauseln der EU-Kommission.</p>
+      <h3>4. Schriften &amp; Analyse</h3>
+      <p>Die verwendeten Schriftarten sind <strong>lokal auf unserem Server eingebunden</strong> — es besteht keine Verbindung zu Google-Servern. Wir setzen <strong>keine Analyse- oder Tracking-Tools</strong> (z. B. Google Analytics) und keine Werbe-Cookies ein.</p>
 
-      <h3>5. Cookies</h3>
-      <p>Wir setzen technisch notwendige Cookies ein, die für den Betrieb der Website erforderlich sind (z. B. Speicherung eurer Cookie-Einwilligung). Mit eurer Einwilligung setzen wir zusätzlich Analyse-Cookies (Google Analytics) ein.</p>
+      <h3>5. Cookies &amp; lokale Speicherung</h3>
+      <p>Wir verwenden <strong>keine Tracking- oder Analyse-Cookies</strong>. Es kommt lediglich technisch notwendige lokale Speicherung im Browser zum Einsatz (z. B. um euren Fortschritt im Kontaktformular zu behalten); dafür ist keine Einwilligung erforderlich.</p>
 
       <h3>6. Eure Rechte</h3>
       <p>Ihr habt das Recht auf: Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO), Datenübertragbarkeit (Art. 20 DSGVO) sowie Widerspruch (Art. 21 DSGVO). Zur Ausübung eurer Rechte wendet euch an: hallo@sowloynab.de</p>
@@ -1811,7 +1793,7 @@ section[id], #hero { scroll-margin-top: 90px; }
       <h3>8. Speicherdauer</h3>
       <p>Anfrage-Daten werden nach Abschluss der Kommunikation und Ablauf gesetzlicher Aufbewahrungsfristen gelöscht, spätestens nach 3 Jahren.</p>
 
-      <p style="margin-top:1.25rem;font-size:.75rem;">Stand: Juni 2026</p>
+      <p style="margin-top:1.25rem;font-size:.75rem;">Stand: August 2026</p>
     </div>
   </div>
 </div>
@@ -1924,23 +1906,11 @@ registerScroll(function() {
   }
 });
 
-/* ── COOKIE BANNER ── */
-function showCookieBanner() {
-  if (!localStorage.getItem('cookie_consent')) {
-    setTimeout(function() { document.getElementById('cookie-banner').classList.add('visible'); }, 800);
-  }
-}
-function acceptCookies() {
-  localStorage.setItem('cookie_consent', 'accepted');
-  document.getElementById('cookie-banner').classList.remove('visible');
-  initGA();
-}
-function declineCookies() {
-  localStorage.setItem('cookie_consent', 'declined');
-  document.getElementById('cookie-banner').classList.remove('visible');
-}
-showCookieBanner();
-if (localStorage.getItem('cookie_consent') === 'accepted') { initGA(); }
+/* Cookie-Banner entfernt: keine Analyse-/Tracking-Cookies -> keine Einwilligung noetig.
+   Leere Platzhalter, falls irgendwo noch aufgerufen. */
+function showCookieBanner(){}
+function acceptCookies(){}
+function declineCookies(){}
 
 /* ── MODALS ── */
 function openModal(id) {
