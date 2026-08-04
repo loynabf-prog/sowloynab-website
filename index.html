@@ -1060,7 +1060,7 @@ section[id], #hero { scroll-margin-top: 90px; }
   #hero.hero-in .hd8 { transition-delay: .68s; }
 }
 </style>
-<script defer src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+<!-- hls.js wird erst geladen, wenn das Content Phone ein echtes Video abspielt (spart Ladezeit) -->
 </head>
 <body>
 
@@ -1137,17 +1137,7 @@ section[id], #hero { scroll-margin-top: 90px; }
 </section>
 
 
-<!-- MARQUEE-BAND -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <div class="marquee-group">
-      <span>TikTok</span><em>✦</em><span>Instagram Reels</span><em>✦</em><span>2 Mio.+ Views</span><em>✦</em><span>680k+ Follower</span><em>✦</em><span>Dreh vor Ort</span><em>✦</em><span>Münster</span><em>✦</em><span>Volle Tische</span><em>✦</em><span>100 % Gastronomie</span><em>✦</em><span>TikTok</span><em>✦</em><span>Instagram Reels</span><em>✦</em><span>2 Mio.+ Views</span><em>✦</em><span>680k+ Follower</span><em>✦</em><span>Dreh vor Ort</span><em>✦</em><span>Münster</span><em>✦</em><span>Volle Tische</span><em>✦</em><span>100 % Gastronomie</span><em>✦</em>
-    </div>
-    <div class="marquee-group">
-      <span>TikTok</span><em>✦</em><span>Instagram Reels</span><em>✦</em><span>2 Mio.+ Views</span><em>✦</em><span>680k+ Follower</span><em>✦</em><span>Dreh vor Ort</span><em>✦</em><span>Münster</span><em>✦</em><span>Volle Tische</span><em>✦</em><span>100 % Gastronomie</span><em>✦</em><span>TikTok</span><em>✦</em><span>Instagram Reels</span><em>✦</em><span>2 Mio.+ Views</span><em>✦</em><span>680k+ Follower</span><em>✦</em><span>Dreh vor Ort</span><em>✦</em><span>Münster</span><em>✦</em><span>Volle Tische</span><em>✦</em><span>100 % Gastronomie</span><em>✦</em>
-    </div>
-  </div>
-</div>
+<!-- Marquee-Band entfernt (weniger Spielerei, bessere Performance) -->
 
 <!-- PROJEKTE -->
 <section id="projekte" class="s s-center">
@@ -1659,9 +1649,6 @@ section[id], #hero { scroll-margin-top: 90px; }
     <div class="footer-copy">© 2026 Sow &amp; Loynab Media · Alle Rechte vorbehalten.</div>
     <div class="footer-place">Mit Herzblut gemacht in Münster</div>
   </div>
-  <p style="max-width:720px;margin:1.5rem auto 0;padding:0 1.5rem;font-size:.66rem;line-height:1.7;color:rgba(245,239,228,.28);text-align:center;">
-    Sow &amp; Loynab Media ist deine Social-Media-Agentur für Gastronomie in Münster: TikTok-Videos, Instagram Reels und Content-Produktion für Restaurants, Cafés, Imbisse und Eisdielen — von der Strategie über den Dreh vor Ort bis zum fertigen Post. Für volle Tische in Münster und im ganzen Münsterland.
-  </p>
 </footer>
 
 <!-- TICK INDEX NAV -->
@@ -2349,21 +2336,36 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     else if (navigator.clipboard) { navigator.clipboard.writeText(url).catch(function(){}); }
   }
   /* HLS beim ersten Abspielen anhaengen (adaptiv, spart Daten bei schlechtem Netz) */
+  /* hls.js erst bei Bedarf nachladen (spart ~100 KB beim Seitenaufruf) */
+  var _hlsLoading = false, _hlsWaiters = [];
+  function loadHlsLib(cb){
+    if (window.Hls){ cb(); return; }
+    _hlsWaiters.push(cb);
+    if (_hlsLoading) return;
+    _hlsLoading = true;
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js';
+    s.onload = function(){ _hlsWaiters.forEach(function(f){ f(); }); _hlsWaiters = []; };
+    s.onerror = function(){ _hlsLoading = false; _hlsWaiters = []; };
+    document.head.appendChild(s);
+  }
   function ensureSource(vid){
     if (!vid || vid.getAttribute('data-hls-loaded') === '1') return;
     var url = vid.getAttribute('data-hls');
     if (!url) return; /* MP4-Platzhalter: nichts zu tun */
-    if (window.Hls && window.Hls.isSupported()){
+    if (vid.canPlayType('application/vnd.apple.mpegurl')){
       vid.setAttribute('data-hls-loaded', '1');
-      var hls = new window.Hls({ enableWorker: true, capLevelToPlayerSize: true });
-      hls.loadSource(url);
-      hls.attachMedia(vid);
-      vid._hls = hls;
-    } else if (vid.canPlayType('application/vnd.apple.mpegurl')){
-      vid.setAttribute('data-hls-loaded', '1');
-      vid.src = url; /* Safari spielt HLS nativ */
+      vid.src = url; /* Safari spielt HLS nativ — kein hls.js noetig */
+      return;
     }
-    /* sonst: hls.js noch nicht geladen -> Markierung offen lassen, spaeter erneut versuchen */
+    vid.setAttribute('data-hls-loaded', '1');
+    loadHlsLib(function(){
+      if (window.Hls && window.Hls.isSupported()){
+        var hls = new window.Hls({ enableWorker: true, capLevelToPlayerSize: true });
+        hls.loadSource(url); hls.attachMedia(vid); vid._hls = hls;
+        var p = vid.play(); if (p && p.catch) p.catch(function(){});
+      }
+    });
   }
   function togglePlay(slideEl){
     var vid = slideEl.querySelector('video'); if (!vid) return;
@@ -2690,19 +2692,7 @@ document.addEventListener('DOMContentLoaded', function(){
   setTimeout(enter, 3000); /* Sicherheits-Fallback */
 })();
 
-/* ── PARALLAX: Hero-Foto zieht langsamer als der Text ── */
-(function(){
-  if(prefersReduced) return;
-  var f = document.querySelector('.hero-founders');
-  var heroEl = document.getElementById('hero');
-  if(!f || !heroEl) return;
-  registerScroll(function(){
-    var b = heroEl.getBoundingClientRect().bottom;
-    if(b < -80) return;
-    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-    f.style.setProperty('--par', (y * 0.13).toFixed(1) + 'px');
-  });
-})();
+/* Parallax entfernt (weniger Repaints beim Scrollen -> fluessiger, schneller) */
 
 /* ── MARQUEE: konstantes Tempo + ziehbar mit Schwung (Glücksrad-Feel) ── */
 (function(){
@@ -2772,28 +2762,8 @@ document.addEventListener('DOMContentLoaded', function(){
   window.addEventListener('pointercancel', endDrag);
 })();
 
-/* ── SMOOTH ANCHOR SCROLL ── */
-(function(){
-  function easeInOutCubic(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
-  document.querySelectorAll('a[href^="#"], .nav-links a').forEach(function(a){
-    a.addEventListener('click', function(e){
-      var href = a.getAttribute('href');
-      if(!href || href === '#') return;
-      var target = document.querySelector(href);
-      if(!target) return;
-      e.preventDefault();
-      var start = window.pageYOffset;
-      var end = target.getBoundingClientRect().top + start - 80;
-      var duration = 900;
-      var t0 = performance.now();
-      requestAnimationFrame(function step(now){
-        var p = Math.min((now - t0) / duration, 1);
-        window.scrollTo(0, start + (end - start) * easeInOutCubic(p));
-        if(p < 1) requestAnimationFrame(step);
-      });
-    });
-  });
-})();
+/* Zweiter (doppelter) Smooth-Scroll-Handler entfernt — er konkurrierte mit dem
+   globalen Handler oben und verursachte das Ruckeln. Jetzt nur noch einer. */
 
 /* ── MAGNETIC BUTTONS ── */
 (function(){
