@@ -150,7 +150,7 @@ function trackEvent(){}
   --sh:      0 2px 16px rgba(0,0,0,0.06);
   --sh2:     0 6px 32px rgba(0,0,0,0.10);
 }
-html { scroll-behavior: smooth; overflow-x: clip; background: #100b09; }
+html { scroll-behavior: auto; overflow-x: clip; background: #100b09; }
 body { background: #100b09; color: var(--text); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 ::selection { background: #e0521a; color: #fff; }
 
@@ -2010,17 +2010,55 @@ function submitQ(e) {
   registerScroll(update);
   window.addEventListener('resize', update, { passive: true });
   update();
-  ticks.forEach(function(t) {
-    t.addEventListener('click', function(e) {
-      e.preventDefault();
-      var tgt = document.querySelector(t.getAttribute('href'));
-      if (tgt) window.scrollTo({ top: tgt.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
-    });
-  });
+  /* Klick-Scroll der Seiten-Nav wird zentral vom globalen Smooth-Scroll (unten) uebernommen. */
 })();
 
 /* ── 50K UPGRADES: INTERAKTIONEN ── */
 var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── Einheitliches, weiches Scrollen zu Anker-Links (getuned, ruckelarm) ──
+   Ersetzt das native Smooth-Scroll: gleichmaessige easeInOutCubic-Kurve,
+   Dauer an die Distanz gekoppelt, bricht ab wenn der Nutzer selbst scrollt. */
+(function(){
+  var OFFSET = 64; /* Platz fuer den Header */
+  function ease(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+  var cancelled = false;
+  function onUserScroll(){ cancelled = true; }
+  function scrollToY(destY){
+    destY = Math.max(0, destY);
+    var startY = window.pageYOffset || document.documentElement.scrollTop;
+    var dist = destY - startY;
+    if (Math.abs(dist) < 2) return;
+    if (prefersReduced){ window.scrollTo(0, destY); return; }
+    var dur = Math.max(480, Math.min(900, 240 + Math.abs(dist) * 0.26));
+    var t0 = null; cancelled = false;
+    window.addEventListener('wheel', onUserScroll, { passive: true });
+    window.addEventListener('touchstart', onUserScroll, { passive: true });
+    function step(now){
+      if (cancelled){ cleanup(); return; }
+      if (t0 === null) t0 = now;
+      var p = Math.min((now - t0) / dur, 1);
+      window.scrollTo(0, startY + dist * ease(p));
+      if (p < 1) requestAnimationFrame(step); else cleanup();
+    }
+    function cleanup(){
+      window.removeEventListener('wheel', onUserScroll);
+      window.removeEventListener('touchstart', onUserScroll);
+    }
+    requestAnimationFrame(step);
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (href === '#'){ e.preventDefault(); scrollToY(0); return; }
+    var tgt = document.querySelector(href);
+    if (!tgt) return;
+    e.preventDefault();
+    scrollToY(tgt.getBoundingClientRect().top + (window.pageYOffset || 0) - OFFSET);
+    if (history.pushState) history.pushState(null, '', href);
+  });
+})();
 
 /* Scroll-Fortschrittsbalken + Back-to-Top */
 (function(){
