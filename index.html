@@ -472,8 +472,10 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cpx .cp-meta { left: 16px; right: 64px; bottom: 26px; }
 .cpx .cp-play svg { width: 58px; height: 58px; }
 /* ── Hero-Teaser (ein Video, Tap öffnet App) ── */
-#cp-teaser-screen { cursor: pointer; }
-.cp-teaser-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+#cp-teaser-screen { cursor: pointer; background: linear-gradient(160deg, #200f07, #40200c 45%, #0e0806); }
+.cp-teaser-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.cp-teaser-play { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.cp-teaser-play svg { width: 30px; height: 30px; color: #fff; background: rgba(0,0,0,.42); border-radius: 50%; padding: 15px; box-shadow: 0 4px 16px rgba(0,0,0,.45); }
 .cp-teaser-cta { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 4; text-align: center; pointer-events: none; }
 .cp-teaser-cta span { display: inline-block; font-family: 'Space Grotesk', sans-serif; font-size: .62rem; font-weight: 600; color: #fff; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.28); padding: 6px 13px; border-radius: 100px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 /* ── Content Phone FAB (global angepinnt) ── */
@@ -1166,9 +1168,10 @@ section[id], #hero { scroll-margin-top: 90px; }
         <div class="phone-badge">680k+ Follower</div>
         <div class="phone-notch"></div>
         <div class="phone-screen" id="cp-teaser-screen" role="button" tabindex="0" aria-label="Content Phone öffnen">
-          <video class="cp-teaser-vid" id="cp-teaser-vid" muted loop playsinline preload="metadata"><source src="hero.mp4" type="video/mp4"></video>
+          <img class="cp-teaser-poster" src="https://vz-f999b65a-f22.b-cdn.net/060d4295-8fb3-4c56-b203-26984108b90c/thumbnail.jpg" alt="Vorschau unserer Videos für Münsters Gastronomie" loading="lazy" decoding="async">
           <div class="cp-grad"></div>
-          <div class="cp-teaser-cta"><span>▶ Antippen &amp; entdecken</span></div>
+          <div class="cp-teaser-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"/></svg></div>
+          <div class="cp-teaser-cta"><span>Antippen &amp; alle Videos ansehen</span></div>
         </div>
       </div>
     </div>
@@ -1649,6 +1652,9 @@ section[id], #hero { scroll-margin-top: 90px; }
     <div class="footer-copy">© 2026 Sow &amp; Loynab Media · Alle Rechte vorbehalten.</div>
     <div class="footer-place">Mit Herzblut gemacht in Münster</div>
   </div>
+  <p style="max-width:720px;margin:1.5rem auto 0;padding:0 1.5rem;font-size:.66rem;line-height:1.7;color:rgba(245,239,228,.28);text-align:center;">
+    Sow &amp; Loynab Media ist deine Social-Media-Agentur für Gastronomie in Münster: TikTok-Videos, Instagram Reels und Content-Produktion für Restaurants, Cafés, Imbisse und Eisdielen — von der Strategie über den Dreh vor Ort bis zum fertigen Post. Für volle Tische in Münster und im ganzen Münsterland.
+  </p>
 </footer>
 
 <!-- TICK INDEX NAV -->
@@ -2592,16 +2598,11 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   if (openWork) openWork.addEventListener('click', function(){ openApp(0); });
 
   /* Hero-Teaser: ein Video als Appetithappen — Tap öffnet die Vollbild-App */
+  /* Teaser ist jetzt ein Standbild (kein Video mehr) -> Tap oeffnet das Content Phone */
   var teaserScreen = document.getElementById('cp-teaser-screen');
-  var teaserVid = document.getElementById('cp-teaser-vid');
-  if (teaserScreen && teaserVid){
+  if (teaserScreen){
     teaserScreen.addEventListener('click', function(){ openApp(0); });
     teaserScreen.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openApp(0); } });
-    if ('IntersectionObserver' in window){
-      new IntersectionObserver(function(es){
-        es.forEach(function(e){ if (e.isIntersecting){ var p = teaserVid.play(); if (p && p.catch) p.catch(function(){}); } else teaserVid.pause(); });
-      }, { threshold: 0.4 }).observe(teaserVid);
-    } else { var pp = teaserVid.play(); if (pp && pp.catch) pp.catch(function(){}); }
   }
 
   /* Direkt-Link: ?cp=1 (oder #phone) öffnet das Content Phone sofort im Vollbild.
