@@ -1985,7 +1985,7 @@ function submitQ(e) {
     document.getElementById('qs-thanks').classList.add('active');
     trackEvent('quiz_complete', { lokal: lokal.value.trim() });
   }
-  fetch('https://formspree.io/f/mkodlooe', { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
+  fetch('https://formspree.io/f/mwleerpb', { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
     .then(showThanks)
     .catch(showThanks);
   return false;
