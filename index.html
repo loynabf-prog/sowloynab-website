@@ -429,6 +429,11 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cp-like-burst svg { width: 90px; height: 90px; color: #ff2d55; filter: drop-shadow(0 6px 20px rgba(0,0,0,.55)); }
 .cp-like-burst.burst { animation: cpBurst .85s ease forwards; }
 @keyframes cpBurst { 0%{opacity:0;transform:scale(.3) rotate(-14deg);} 14%{opacity:1;transform:scale(1.15) rotate(-4deg);} 30%{transform:scale(.92) rotate(0);} 68%{opacity:1;transform:scale(1);} 100%{opacity:0;transform:scale(1.25);} }
+/* Ergebnis-Tag oben links: das Business-Resultat ("3 Wochen ausgebucht") */
+.cp-result { position: absolute; top: 10px; left: 10px; z-index: 6; max-width: calc(100% - 52px); display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px; background: linear-gradient(135deg, rgba(201,162,74,.96), rgba(178,138,54,.96)); color: #14110b; font-family: 'Space Grotesk', sans-serif; font-size: .5rem; font-weight: 700; letter-spacing: .01em; line-height: 1.2; box-shadow: 0 4px 14px rgba(0,0,0,.35); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transform: translateZ(0); }
+.cp-result::before { content: '▲'; font-size: .46rem; }
+.cpx .cp-result { top: 12px; left: 12px; font-size: .68rem; padding: 6px 12px; }
+.cpx .cp-result::before { font-size: .6rem; }
 .cp-mute { position: absolute; top: 10px; right: 10px; z-index: 6; width: 30px; height: 30px; border: none; border-radius: 50%; background: rgba(0,0,0,.42); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 .cp-mute svg { width: 15px; height: 15px; }
 .cpx .cp-mute { width: 40px; height: 40px; top: 12px; right: 12px; }
@@ -1179,7 +1184,7 @@ section[id], #hero { scroll-margin-top: 90px; }
         <div class="phone-badge">680k+ Follower</div>
         <div class="phone-notch"></div>
         <div class="phone-screen" id="cp-teaser-screen" role="button" tabindex="0" aria-label="Content Phone öffnen">
-          <img class="cp-teaser-poster" src="https://vz-f999b65a-f22.b-cdn.net/060d4295-8fb3-4c56-b203-26984108b90c/thumbnail.jpg" alt="Vorschau unserer Videos für Münsters Gastronomie" loading="lazy" decoding="async">
+          <img class="cp-teaser-poster" src="https://vz-f999b65a-f22.b-cdn.net/c416cfbb-a406-4a80-bd12-8d236744bef3/thumbnail.jpg" alt="Vorschau unserer Videos für Münsters Gastronomie" loading="lazy" decoding="async">
           <div class="cp-grad"></div>
           <div class="cp-teaser-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"/></svg></div>
           <div class="cp-teaser-cta"><span>Antippen &amp; alle Videos ansehen</span></div>
@@ -2257,11 +2262,10 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
      src: Platzhalter (hero.mp4). Für echte Videos hier die HLS/MP4-URL + poster eintragen. */
   var CP_DATA = [
     { name: 'BelChicken', handle: 'belchicken', videos: [
-      { cap: '30%-Aktion 🔥 Schlange bis auf die Straße', likes: '12.4k', views: '574k', comments: '312' },
-      { cap: 'POV: der beste Chicken-Spot am HBF', likes: '8.1k', views: '210k', comments: '144' },
-      { cap: 'Von 43 auf über 20.000 Follower', likes: '5.6k', views: '98k', comments: '87' },
-      { cap: 'Crispy. Juicy. Viral.', likes: '4.9k', views: '76k', comments: '55' },
-      { cap: 'Warum plötzlich alle herkommen', likes: '3.2k', views: '41k', comments: '38' }
+      { cap: '', likes: '', views: '', comments: '', bunny: { host: 'vz-f999b65a-f22.b-cdn.net', id: 'c416cfbb-a406-4a80-bd12-8d236744bef3' } },
+      { cap: '', likes: '', views: '', comments: '', bunny: { host: 'vz-f999b65a-f22.b-cdn.net', id: '2042ac32-592f-4106-a8e6-f6931c46aadc' } },
+      { cap: '', likes: '', views: '', comments: '', bunny: { host: 'vz-f999b65a-f22.b-cdn.net', id: 'e50b81d2-b2d5-4e44-bf86-6120746835f7' } },
+      { cap: '', likes: '', views: '', comments: '', bunny: { host: 'vz-f999b65a-f22.b-cdn.net', id: '9539cac6-eb5a-4aee-9e05-ae9b9f4c9df0' } }
     ]},
     { name: 'Schleckofatz', handle: 'schleckofatz', videos: [
       { cap: 'Neueröffnung — Tag 1 🍦', likes: '4.2k', views: '88k', comments: '61', bunny: { host: 'vz-f999b65a-f22.b-cdn.net', id: '060d4295-8fb3-4c56-b203-26984108b90c' } },
@@ -2295,16 +2299,25 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   }
 
   function slide(v, c){
+    var likes = (v.likes || '').trim(), comments = (v.comments || '').trim();
+    var views = (v.views || '').trim(), cap = (v.cap || '').trim(), result = (v.result || '').trim();
+    var likeBtn = likes
+      ? '<button type="button" class="cp-act cp-like" aria-label="Gefällt mir" data-base="' + likes + '">' + HEART + '<span>' + likes + '</span></button>'
+      : '<button type="button" class="cp-act cp-like" aria-label="Gefällt mir" data-base="0">' + HEART + '<span></span></button>';
+    var commentBtn = comments ? '<div class="cp-act">' + COMMENT + '<span>' + comments + '</span></div>' : '';
     return '<div class="cp-slide paused" data-liked="0">'
       + videoTag(v)
       + '<div class="cp-grad"></div><div class="cp-play">' + PLAY + '</div>'
       + '<div class="cp-like-burst">' + HEART + '</div>'
       + '<button type="button" class="cp-mute" aria-label="Ton an/aus">' + SPK_OFF + '</button>'
+      + (result ? '<div class="cp-result">' + result + '</div>' : '')
       + '<div class="cp-rail">'
-        + '<button type="button" class="cp-act cp-like" aria-label="Gefällt mir" data-base="' + v.likes + '">' + HEART + '<span>' + v.likes + '</span></button>'
-        + '<div class="cp-act">' + COMMENT + '<span>' + v.comments + '</span></div>'
+        + likeBtn
+        + commentBtn
         + '<button type="button" class="cp-act cp-share" aria-label="Teilen">' + SHARE + '<span>Teilen</span></button></div>'
-      + '<div class="cp-meta"><div class="cp-handle">@' + c.handle + '</div><div class="cp-cap">' + v.cap + '</div><div class="cp-views">' + v.views + ' Views</div></div>'
+      + '<div class="cp-meta"><div class="cp-handle">@' + c.handle + '</div>'
+        + (cap ? '<div class="cp-cap">' + cap + '</div>' : '')
+        + (views ? '<div class="cp-views">' + views + ' Views</div>' : '') + '</div>'
       + '<div class="cp-scrubtime"><span class="cp-t-cur">0:00</span> / <span class="cp-t-dur">0:00</span></div>'
       + '<div class="cp-scrub"><div class="cp-scrub-track"><div class="cp-scrub-fill"></div><div class="cp-scrub-knob"></div></div></div>'
       + '</div>';
