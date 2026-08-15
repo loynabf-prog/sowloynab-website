@@ -495,6 +495,50 @@ h1 em { font-family: 'Playfair Display', serif; color: var(--gold-l); font-style
 .cpx .cp-rail { right: 12px; bottom: 26px; gap: 20px; }
 .cpx .cp-meta { left: 16px; right: 64px; bottom: 26px; }
 .cpx .cp-play svg { width: 58px; height: 58px; }
+/* ── Story-Karten im Feed: Ergebnis · Testimonial · Abschluss-CTA ── */
+.cp-card { cursor: default; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px 20px; }
+.cp-card .cp-card-inner { width: 100%; max-width: 320px; }
+.cp-card-kicker { font-family: 'Space Grotesk', sans-serif; font-size: .58rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold, #c9a24a); margin-bottom: 14px; }
+.cpx .cp-card-kicker { font-size: .72rem; }
+/* Ergebnis-Karte */
+.cp-card-result { background: radial-gradient(120% 90% at 50% 12%, #2a1608 0%, #160c06 55%, #0b0705 100%); }
+.cp-rc-route { font-family: 'Space Grotesk', sans-serif; font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.72); margin-bottom: 10px; }
+.cpx .cp-rc-route { font-size: 1rem; }
+.cp-rc-big { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 2.6rem; line-height: 1; color: #fff; background: linear-gradient(180deg,#fff,#e9c877); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.cpx .cp-rc-big { font-size: 3.4rem; }
+.cp-rc-biglabel { font-size: .6rem; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-top: 4px; }
+.cpx .cp-rc-biglabel { font-size: .74rem; }
+.cp-rc-cols { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 20px 0; }
+.cp-rc-col { flex: 1; padding: 12px 6px; border-radius: 14px; background: rgba(255,255,255,.05); border: 1px solid rgba(201,162,74,.22); }
+.cp-rc-loc { font-family: 'Space Grotesk', sans-serif; font-size: .62rem; font-weight: 700; color: var(--gold, #c9a24a); text-transform: uppercase; letter-spacing: .05em; }
+.cpx .cp-rc-loc { font-size: .74rem; }
+.cp-rc-jump { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 800; color: #fff; margin: 4px 0 2px; }
+.cpx .cp-rc-jump { font-size: 1.15rem; }
+.cp-rc-meta { font-size: .52rem; color: rgba(255,255,255,.55); }
+.cpx .cp-rc-meta { font-size: .64rem; }
+.cp-rc-arrow { color: rgba(201,162,74,.55); font-weight: 700; flex: 0 0 auto; }
+.cp-rc-line { font-size: .68rem; line-height: 1.5; color: rgba(255,255,255,.9); font-weight: 500; }
+.cpx .cp-rc-line { font-size: .84rem; }
+/* Testimonial-Karte */
+.cp-card-testi { background: radial-gradient(120% 90% at 50% 20%, #241206 0%, #140b06 60%, #0b0705 100%); }
+.cp-tc-quote { font-size: 1.05rem; line-height: 1.5; font-weight: 500; color: #fff; margin: 0 0 16px; quotes: '„' '"'; }
+.cpx .cp-tc-quote { font-size: 1.25rem; }
+.cp-tc-quote::before { content: open-quote; } .cp-tc-quote::after { content: close-quote; }
+.cp-tc-by { display: flex; flex-direction: column; gap: 2px; }
+.cp-tc-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--gold, #c9a24a); font-size: .8rem; }
+.cp-tc-role { font-size: .58rem; color: rgba(255,255,255,.55); }
+.cpx .cp-tc-role { font-size: .7rem; }
+/* Abschluss-CTA-Karte */
+.cp-card-cta { background: radial-gradient(120% 90% at 50% 18%, #3a1c0a 0%, #1c0f07 58%, #0b0705 100%); }
+.cp-cta-h { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 800; line-height: 1.25; color: #fff; margin-bottom: 8px; }
+.cpx .cp-cta-h { font-size: 1.4rem; }
+.cp-cta-sub { font-size: .72rem; color: rgba(255,255,255,.72); margin-bottom: 20px; }
+.cpx .cp-cta-sub { font-size: .86rem; }
+.cp-cta { display: inline-block; padding: 12px 26px; border-radius: 100px; background: linear-gradient(105deg,#e0521a,#ff8a50 50%,#e0521a); background-size: 200% auto; color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: .82rem; text-decoration: none; box-shadow: 0 10px 30px rgba(224,82,26,.4); transition: background-position .4s, transform .2s; }
+.cp-cta:hover { background-position: right center; transform: translateY(-1px); }
+.cpx .cp-cta { font-size: .95rem; padding: 14px 30px; }
+.cp-cta-foot { margin-top: 14px; font-size: .56rem; letter-spacing: .04em; color: rgba(255,255,255,.5); }
+.cpx .cp-cta-foot { font-size: .68rem; }
 /* ── Hero-Teaser (ein Video, Tap öffnet App) ── */
 #cp-teaser-screen { cursor: pointer; background: linear-gradient(160deg, #200f07, #40200c 45%, #0e0806); }
 .cp-teaser-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
@@ -2272,7 +2316,11 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   /* EINE Datenquelle — später einfach erweitern oder aus JSON laden.
      src: Platzhalter (hero.mp4). Für echte Videos hier die HLS/MP4-URL + poster eintragen. */
   var CP_DATA = [
-    { name: 'BelChicken', handle: 'belchicken', videos: [
+    { name: 'BelChicken', handle: 'belchicken',
+      story: { route: 'Münster → Essen', big: '30.000', bigLabel: 'Follower über 2 Accounts',
+        cols: [ { loc: 'Münster', jump: '0 → 15.000', meta: '10 Videos' }, { loc: 'Essen', jump: '0 → 15.000', meta: '8 Videos' } ],
+        line: 'Zweimal bei null gestartet. Zweimal geliefert.<br>Kein Zufall — ein System.' },
+      videos: [
       { cap: 'markier jemanden der das alleine schafft 🍗 #halal', likes: '24.4k', views: '585k', comments: '760', saves: '5.017', result: '585K Views · +1.700 Follower',
         topComments: [ { text: 'Sehr gutes Angebot', likes: '72' }, { text: 'Wo ist das? 📍' } ],
         bunny: { host: 'vz-f999b65a-f22.b-cdn.net', id: 'c416cfbb-a406-4a80-bd12-8d236744bef3' } },
@@ -2355,6 +2403,46 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
       + '<div class="cp-scrubtime"><span class="cp-t-cur">0:00</span> / <span class="cp-t-dur">0:00</span></div>'
       + '<div class="cp-scrub"><div class="cp-scrub-track"><div class="cp-scrub-fill"></div><div class="cp-scrub-knob"></div></div></div>'
       + '</div>';
+  }
+
+  /* ---- Story-Karten (kein Video): Ergebnis · Testimonial · Abschluss-CTA ---- */
+  function resultCard(st){
+    var cols = (st.cols || []).map(function(col){
+      return '<div class="cp-rc-col"><div class="cp-rc-loc">' + esc(col.loc) + '</div>'
+        + '<div class="cp-rc-jump">' + esc(col.jump) + '</div>'
+        + '<div class="cp-rc-meta">' + esc(col.meta) + '</div></div>';
+    }).join('<div class="cp-rc-arrow">→</div>');
+    return '<div class="cp-slide cp-card cp-card-result"><div class="cp-card-inner">'
+      + '<div class="cp-card-kicker">▲ Ergebnis</div>'
+      + (st.route ? '<div class="cp-rc-route">' + esc(st.route) + '</div>' : '')
+      + '<div class="cp-rc-big">' + esc(st.big) + '</div>'
+      + (st.bigLabel ? '<div class="cp-rc-biglabel">' + esc(st.bigLabel) + '</div>' : '')
+      + (cols ? '<div class="cp-rc-cols">' + cols + '</div>' : '')
+      + (st.line ? '<div class="cp-rc-line">' + st.line + '</div>' : '')
+      + '</div></div>';
+  }
+  function testiCard(t){
+    return '<div class="cp-slide cp-card cp-card-testi"><div class="cp-card-inner">'
+      + '<div class="cp-card-kicker">❝ Kundenstimme</div>'
+      + '<blockquote class="cp-tc-quote">' + esc(t.quote) + '</blockquote>'
+      + '<div class="cp-tc-by"><span class="cp-tc-name">' + esc(t.name) + '</span>'
+      + (t.role ? '<span class="cp-tc-role">' + esc(t.role) + '</span>' : '') + '</div>'
+      + '</div></div>';
+  }
+  function ctaCard(c){
+    return '<div class="cp-slide cp-card cp-card-cta"><div class="cp-card-inner">'
+      + '<div class="cp-cta-h">Willst du das für deinen Laden?</div>'
+      + '<div class="cp-cta-sub">Volle Tische fangen mit einem Video an.</div>'
+      + '<a href="#quiz" class="cp-cta">Jetzt anfragen →</a>'
+      + '<div class="cp-cta-foot">unverbindlich · kostenlos · Antwort in 24 h</div>'
+      + '</div></div>';
+  }
+  function cardSlides(c){
+    var html = '';
+    if (c.story) html += resultCard(c.story);
+    if (c.testimonial) html += testiCard(c.testimonial);
+    html += ctaCard(c);
+    return html;
   }
 
   /* ---- Interaktions-Helfer (Like / Ton / Teilen) ---- */
@@ -2483,7 +2571,9 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     /* Tippen = Play/Pause · Doppeltipp = Like · Buttons = ihre Aktion */
     var lastTap = 0, tapTimer = null;
     feedEl.addEventListener('click', function(e){
-      if (e.target.closest('.cp-cta') || e.target.closest('.cp-scrub')) return;
+      var ctaBtn = e.target.closest('.cp-cta');
+      if (ctaBtn){ e.preventDefault(); e.stopPropagation(); closeToContact(); return; }
+      if (e.target.closest('.cp-scrub')) return;
       var likeBtn = e.target.closest('.cp-like');
       if (likeBtn){ e.stopPropagation(); tapLike(likeBtn.closest('.cp-slide')); return; }
       var muteBtn = e.target.closest('.cp-mute');
@@ -2515,7 +2605,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
   function buildApp(){
     if (built || !cpxTrack) return;
     cpxTrack.innerHTML = CP_DATA.map(function(c){
-      return '<div class="cpx-panel"><div class="cp-feed">' + c.videos.map(function(v){ return slide(v, c); }).join('') + '</div></div>';
+      return '<div class="cpx-panel"><div class="cp-feed">' + c.videos.map(function(v){ return slide(v, c); }).join('') + cardSlides(c) + '</div></div>';
     }).join('');
     cpxTabs.innerHTML = CP_DATA.map(function(c, i){
       return '<button type="button" class="cp-tab" data-i="' + i + '">' + c.name + '</button>';
@@ -2655,6 +2745,17 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     } else {
       finish();
     }
+  }
+  /* CTA-Karte: Phone schliessen, dann sanft zum Kontaktformular scrollen */
+  function closeToContact(){
+    closeApp();
+    var delay = prefersReduced ? 0 : 560;
+    setTimeout(function(){
+      var t = document.getElementById('quiz'); if (!t) return;
+      var y = t.getBoundingClientRect().top + (window.pageYOffset || 0) - 64;
+      window.scrollTo({ top: Math.max(0, y), behavior: prefersReduced ? 'auto' : 'smooth' });
+      if (history.pushState) history.pushState(null, '', '#quiz');
+    }, delay);
   }
   if (cpxClose) cpxClose.addEventListener('click', closeApp);
   if (cpx) cpx.addEventListener('click', function(e){ if (e.target === cpx) closeApp(); });
