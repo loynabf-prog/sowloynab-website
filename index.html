@@ -801,12 +801,37 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
   .footer-cols { flex-wrap: nowrap; justify-content: flex-end; }
 }
 
-/* ── STICKY MOBILE CTA ── */
-.sticky-cta { display: none !important; }
+/* ── STICKY MOBILE CTA ── (mobil sichtbar; Desktop via min-width:680 ausgeblendet) */
+.sticky-cta { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 295;
+  align-items: center; justify-content: space-between; gap: 12px;
+  padding: .7rem 1rem; padding-bottom: calc(.7rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(16,11,9,.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(224,82,26,.28); box-shadow: 0 -10px 30px rgba(0,0,0,.45);
+  transform: translateY(125%); transition: transform .42s cubic-bezier(.22,1,.36,1); }
 .sticky-cta.visible { transform: translateY(0); }
 .sticky-cta-text { font-size: .78rem; font-weight: 600; color: var(--text); line-height: 1.3; }
 .sticky-cta-text small { display: block; font-size: .68rem; font-weight: 400; color: var(--muted); }
 .sticky-cta .btn-gold { white-space: nowrap; font-size: .8rem; padding: .65rem 1.25rem; }
+/* Floating-Buttons ueber die Leiste heben, solange sie sichtbar ist (nur Mobil) */
+@media (max-width: 679px) {
+  body.sticky-shown .cp-fab { bottom: calc(1.25rem + 58px); }
+  body.sticky-shown .wa-btn { bottom: calc(1.5rem + 58px); }
+  body.sticky-shown .to-top { display: none; }
+}
+/* ── KUNDEN-LEISTE (Social Proof) ── */
+.clients-strip { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .5rem 1.1rem;
+  max-width: 1080px; margin: 0 auto; padding: 1.35rem 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.07); border-bottom: 1px solid rgba(255,255,255,.07); }
+.clients-label { font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.clients-names { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: .98rem; color: rgba(245,239,228,.85); }
+.clients-names .cs-dot { color: var(--gold); opacity: .75; }
+/* ── RISIKO-UMKEHR-BAND ── */
+.risk-band { border-top: 1px solid rgba(224,82,26,.16); border-bottom: 1px solid rgba(224,82,26,.16); background: rgba(224,82,26,.045); }
+.risk-inner { max-width: 1080px; margin: 0 auto; padding: 1.05rem 1.5rem; display: flex; flex-wrap: wrap;
+  align-items: center; justify-content: center; gap: .65rem 1.9rem; }
+.risk-item { display: inline-flex; align-items: center; gap: .5rem; font-size: .82rem; font-weight: 600; color: rgba(245,239,228,.86); }
+.risk-item svg { width: 16px; height: 16px; fill: none; stroke: var(--gold-l); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
 
 /* ── COOKIE BANNER ── */
 /* ROI KALKULATOR */
@@ -1059,18 +1084,17 @@ section[id], #hero { scroll-margin-top: 90px; }
   .footer-cta-band { padding: 3.5rem 1.5rem 2.5rem; }
 
   /* Generische Swipe-Reihen: eine Karte sichtbar, nächste lugt an */
-  .svc-grid, .pain-grid, .insight-grid, .process-steps {
+  .svc-grid, .pain-grid, .insight-grid {
     display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
     gap: .9rem; margin-left: -1.5rem; margin-right: -1.5rem;
     padding-left: 1.5rem; padding-right: 1.5rem; padding-bottom: .5rem;
     scrollbar-width: none; -webkit-overflow-scrolling: touch;
     background: none; border: none; box-shadow: none; border-radius: 0; overflow-y: hidden;
   }
-  .svc-grid::-webkit-scrollbar, .pain-grid::-webkit-scrollbar, .insight-grid::-webkit-scrollbar, .process-steps::-webkit-scrollbar { display: none; }
-  /* Creator-Karten: untereinander (kein Horizontal-Swipe) */
+  .svc-grid::-webkit-scrollbar, .pain-grid::-webkit-scrollbar, .insight-grid::-webkit-scrollbar { display: none; }
+  /* Creator-Karten & Ablauf-Schritte: untereinander (kein Horizontal-Swipe) */
   .founders-grid { display: flex; flex-direction: column; gap: 1rem; }
   .svc-grid > *, .pain-grid > *, .insight-grid > * { flex: 0 0 80%; scroll-snap-align: center; }
-  .process-steps > * { flex: 0 0 84%; scroll-snap-align: center; }
 
   /* Karten, die vorher im Verbund-Grid steckten, brauchen jetzt eigene Ränder */
   .svc-card { border: 1px solid var(--border2); border-radius: 16px; padding: 1.3rem 1.4rem; }
@@ -1225,7 +1249,13 @@ section[id], #hero { scroll-margin-top: 90px; }
 </section>
 
 
-<!-- Marquee-Band entfernt (weniger Spielerei, bessere Performance) -->
+<!-- KUNDEN-LEISTE · Social Proof direkt nach dem Hero -->
+<div class="clients-strip">
+  <span class="clients-label">Schon dabei</span>
+  <div class="clients-names">
+    <span>BelChicken</span><span class="cs-dot">·</span><span>Schleckofatz</span><span class="cs-dot">·</span><span>Das Licht e.V.</span>
+  </div>
+</div>
 
 <!-- PROJEKTE -->
 <section id="projekte" class="s s-center">
@@ -1424,7 +1454,7 @@ section[id], #hero { scroll-margin-top: 90px; }
 </section>
 
 <!-- WIE ES FUNKTIONIERT -->
-<section id="process" class="s" style="display:none">
+<section id="process" class="s">
   <div class="s-inner">
     <span class="tag anim">● Dein Aufwand? Fast keiner.</span>
     <h2 class="anim anim-delay-1">Für dich bleibt's <em>entspannt.</em></h2>
@@ -1612,6 +1642,16 @@ section[id], #hero { scroll-margin-top: 90px; }
     <div style="margin-top:1.2rem;" class="anim"><a href="#quiz" class="btn btn-gold-lg">Frag Fassie &amp; Lion direkt →</a></div>
   </div>
 </section>
+
+<!-- RISIKO-UMKEHR-BAND · letzter Vertrauens-Anker vor dem Formular -->
+<div class="risk-band">
+  <div class="risk-inner">
+    <span class="risk-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>monatlich kündbar</span>
+    <span class="risk-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>kein Jahresvertrag</span>
+    <span class="risk-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>wir kommen zu dir</span>
+    <span class="risk-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>unverbindlich &amp; kostenlos</span>
+  </div>
+</div>
 
 <!-- QUIZ -->
 <section id="quiz" class="s">
@@ -1967,10 +2007,11 @@ registerScroll(function() {
   if (heroBottom < 0) {
     nav.classList.add('nav-light');
     // Sticky-Leiste weg, sobald das Kontaktformular sichtbar ist (verdeckt sonst den Absenden-Button)
-    if (quizVisible) { stickyCta.classList.remove('visible'); if (waReady) waBtn.classList.remove('visible'); }
-    else { stickyCta.classList.add('visible'); if (waReady) waBtn.classList.add('visible'); }
+    if (quizVisible) { stickyCta.classList.remove('visible'); document.body.classList.remove('sticky-shown'); if (waReady) waBtn.classList.remove('visible'); }
+    else { stickyCta.classList.add('visible'); document.body.classList.add('sticky-shown'); if (waReady) waBtn.classList.add('visible'); }
   } else {
     stickyCta.classList.remove('visible');
+    document.body.classList.remove('sticky-shown');
     nav.classList.remove('nav-light');
     if (waReady) waBtn.classList.remove('visible');
   }
