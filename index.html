@@ -832,14 +832,6 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
   align-items: center; justify-content: center; gap: .65rem 1.9rem; }
 .risk-item { display: inline-flex; align-items: center; gap: .5rem; font-size: .82rem; font-weight: 600; color: rgba(245,239,228,.86); }
 .risk-item svg { width: 16px; height: 16px; fill: none; stroke: var(--gold-l); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
-/* ── PERSONALISIERTE BEGRÜSSUNG (?to=) ── */
-.hero-hey { display: inline-flex; align-items: center; gap: .5rem; margin-bottom: 1.1rem; padding: .5rem .95rem; border-radius: 100px;
-  background: linear-gradient(135deg, rgba(224,82,26,.20), rgba(224,82,26,.07)); border: 1px solid rgba(224,82,26,.38);
-  color: #f5efe4; font-size: .8rem; font-weight: 600; line-height: 1.3; animation: heyIn .6s cubic-bezier(.22,1,.36,1) both; }
-.hero-hey-wave { font-size: 1rem; animation: heyWave 2.4s ease-in-out infinite; transform-origin: 70% 70%; }
-#hero-hey-name { color: var(--gold-l); font-weight: 800; }
-@keyframes heyIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes heyWave { 0%,60%,100% { transform: rotate(0); } 15% { transform: rotate(16deg); } 30% { transform: rotate(-8deg); } 45% { transform: rotate(12deg); } }
 /* ── VERKNAPPUNG ── */
 .scarcity { display: inline-flex; align-items: center; gap: .5rem; margin-top: 1rem; padding: .45rem .9rem; border-radius: 100px;
   background: rgba(224,82,26,.10); border: 1px solid rgba(224,82,26,.28); color: var(--gold-l); font-size: .74rem; font-weight: 700; letter-spacing: .01em; }
@@ -1107,8 +1099,7 @@ section[id], #hero { scroll-margin-top: 90px; }
   .hero-sub { display: none; }
   .hero-stats { order: 5; }
   .sig { order: 7; }
-  /* Neue Hero-Elemente korrekt einordnen: Gruss ganz oben, Micro-CTA direkt unter die Buttons */
-  .hero-hey { order: 1; align-self: center; }
+  /* Micro-CTA direkt unter die Buttons einordnen */
   .hero-btns { margin-bottom: 1rem; }
   .hero-microcta { order: 4; margin-top: 0; margin-bottom: 2.25rem; }
   .phone { width: 200px; }
@@ -1254,7 +1245,6 @@ section[id], #hero { scroll-margin-top: 90px; }
   </div>
   <div class="hero-inner">
     <div>
-      <div class="hero-hey" id="hero-hey" hidden><span class="hero-hey-wave">👋</span> Hey <span id="hero-hey-name"></span> — schau, was wir für Läden wie euch machen.</div>
       <div class="hero-eyebrow he hd1">
         <div class="hero-eyebrow-line"></div>
         <div class="hero-badge"><span class="badge-dot"></span>Über 2 Mio. Views für Münsters Gastronomie</div>
@@ -2063,20 +2053,6 @@ registerScroll(function() {
     if (waReady) waBtn.classList.remove('visible');
   }
 });
-
-/* ── PERSONALISIERTER LINK: ?to=name zeigt eine Begruessung im Hero ──
-   Fuer Kalt-Akquise: sowloynab.de/?to=trattoria-bella  ->  "Hey Trattoria Bella ..."
-   Eingabe wird gesaeubert und per textContent gesetzt (kein HTML -> kein XSS). */
-(function(){
-  var to = new URLSearchParams(location.search).get('to');
-  if (!to) return;
-  try { to = decodeURIComponent(to); } catch(e){}
-  to = to.replace(/[_+-]+/g, ' ').replace(/[^\p{L}\p{N} &.'’]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40);
-  if (!to) return;
-  to = to.replace(/\b\p{L}/gu, function(c){ return c.toUpperCase(); });
-  var hey = document.getElementById('hero-hey'), nm = document.getElementById('hero-hey-name');
-  if (hey && nm){ nm.textContent = to; hey.hidden = false; }
-})();
 
 /* Cookie-Banner entfernt: keine Analyse-/Tracking-Cookies -> keine Einwilligung noetig.
    Leere Platzhalter, falls irgendwo noch aufgerufen. */
