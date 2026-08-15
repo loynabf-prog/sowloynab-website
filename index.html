@@ -832,6 +832,33 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; hei
   align-items: center; justify-content: center; gap: .65rem 1.9rem; }
 .risk-item { display: inline-flex; align-items: center; gap: .5rem; font-size: .82rem; font-weight: 600; color: rgba(245,239,228,.86); }
 .risk-item svg { width: 16px; height: 16px; fill: none; stroke: var(--gold-l); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+/* ── PERSONALISIERTE BEGRÜSSUNG (?to=) ── */
+.hero-hey { display: inline-flex; align-items: center; gap: .5rem; margin-bottom: 1.1rem; padding: .5rem .95rem; border-radius: 100px;
+  background: linear-gradient(135deg, rgba(224,82,26,.20), rgba(224,82,26,.07)); border: 1px solid rgba(224,82,26,.38);
+  color: #f5efe4; font-size: .8rem; font-weight: 600; line-height: 1.3; animation: heyIn .6s cubic-bezier(.22,1,.36,1) both; }
+.hero-hey-wave { font-size: 1rem; animation: heyWave 2.4s ease-in-out infinite; transform-origin: 70% 70%; }
+#hero-hey-name { color: var(--gold-l); font-weight: 800; }
+@keyframes heyIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes heyWave { 0%,60%,100% { transform: rotate(0); } 15% { transform: rotate(16deg); } 30% { transform: rotate(-8deg); } 45% { transform: rotate(12deg); } }
+/* ── VERKNAPPUNG ── */
+.scarcity { display: inline-flex; align-items: center; gap: .5rem; margin-top: 1rem; padding: .45rem .9rem; border-radius: 100px;
+  background: rgba(224,82,26,.10); border: 1px solid rgba(224,82,26,.28); color: var(--gold-l); font-size: .74rem; font-weight: 700; letter-spacing: .01em; }
+.scarcity .scarcity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold-l); box-shadow: 0 0 0 0 rgba(224,82,26,.6); animation: scarcityPulse 2s infinite; flex: 0 0 auto; }
+@keyframes scarcityPulse { 0% { box-shadow: 0 0 0 0 rgba(224,82,26,.55); } 70% { box-shadow: 0 0 0 7px rgba(224,82,26,0); } 100% { box-shadow: 0 0 0 0 rgba(224,82,26,0); } }
+/* ── GRATIS CONTENT-CHECK (Audit-Hook) ── */
+.audit-band { position: relative; }
+.audit-card { max-width: 720px; margin: 0 auto; padding: 2rem 1.75rem; border-radius: 22px; text-align: center;
+  background: linear-gradient(150deg, rgba(224,82,26,.13), rgba(255,255,255,.03) 60%); border: 1px solid rgba(224,82,26,.30);
+  box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+.audit-tag { display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-l); margin-bottom: .7rem; }
+.audit-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.35rem, 4.5vw, 1.9rem); font-weight: 800; line-height: 1.2; color: #f5efe4; margin-bottom: .7rem; }
+.audit-card p { font-size: .92rem; color: rgba(245,239,228,.72); max-width: 500px; margin: 0 auto 1.4rem; line-height: 1.6; }
+.audit-card .btn { margin: 0 auto; }
+.audit-foot { margin-top: .9rem; font-size: .68rem; color: rgba(245,239,228,.45); }
+.hero-microcta { display: inline-flex; align-items: center; gap: .35rem; margin-top: .9rem; font-size: .8rem; font-weight: 600;
+  color: rgba(245,239,228,.62); text-decoration: none; transition: color .2s; }
+.hero-microcta:hover { color: var(--gold-l); }
+.hero-microcta u { text-decoration: none; color: var(--gold-l); border-bottom: 1px solid rgba(224,82,26,.4); }
 
 /* ── COOKIE BANNER ── */
 /* ROI KALKULATOR */
@@ -1080,6 +1107,10 @@ section[id], #hero { scroll-margin-top: 90px; }
   .hero-sub { display: none; }
   .hero-stats { order: 5; }
   .sig { order: 7; }
+  /* Neue Hero-Elemente korrekt einordnen: Gruss ganz oben, Micro-CTA direkt unter die Buttons */
+  .hero-hey { order: 1; align-self: center; }
+  .hero-btns { margin-bottom: 1rem; }
+  .hero-microcta { order: 4; margin-top: 0; margin-bottom: 2.25rem; }
   .phone { width: 200px; }
   .footer-cta-band { padding: 3.5rem 1.5rem 2.5rem; }
 
@@ -1223,6 +1254,7 @@ section[id], #hero { scroll-margin-top: 90px; }
   </div>
   <div class="hero-inner">
     <div>
+      <div class="hero-hey" id="hero-hey" hidden><span class="hero-hey-wave">👋</span> Hey <span id="hero-hey-name"></span> — schau, was wir für Läden wie euch machen.</div>
       <div class="hero-eyebrow he hd1">
         <div class="hero-eyebrow-line"></div>
         <div class="hero-badge"><span class="badge-dot"></span>Über 2 Mio. Views für Münsters Gastronomie</div>
@@ -1235,6 +1267,7 @@ section[id], #hero { scroll-margin-top: 90px; }
         <a href="#quiz" class="btn btn-gold-lg">Anfragen</a>
         <a href="#projekte" class="btn btn-outline">Cases</a>
       </div>
+      <a href="#audit" class="hero-microcta he hd7">Noch unsicher? <u>Gratis Content-Check in 60 Sek.&nbsp;→</u></a>
       <div class="sig he hd7">
         <span class="sig-dash"></span>
         <span><span class="sig-name">Fassie &amp; Lion</span> <span class="sig-sub">· deine Creator aus Münster</span></span>
@@ -1296,6 +1329,19 @@ section[id], #hero { scroll-margin-top: 90px; }
   <svg class="ms-skyline" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
     <path fill="currentColor" d="M0 120 V84 h34 l14-18 14 18 h30 V66 h6 V54 h6 V42 h6 V54 h6 V66 h6 v18 h28 l16-22 16 22 h36 v-6 h40 l6-10 6-46 6-14 6 14 6 46 6 10 h40 v18 h30 V70 l18-24 18 24 v26 h44 l12-16 12 16 h30 V72 h8 V58 h8 V44 h8 V58 h8 V72 h10 v24 h34 V60 l22-30 22 30 v36 h40 l14-18 14 18 h34 V70 h6 V56 h6 V70 h6 v26 h40 V78 l16-20 16 20 v18 h48 l12-16 12 16 h40 V72 l20-26 20 26 v24 H1200 V120 Z"/>
   </svg>
+</section>
+
+<!-- GRATIS CONTENT-CHECK (Audit-Hook) -->
+<section id="audit" class="s audit-band">
+  <div class="s-inner">
+    <div class="audit-card anim">
+      <span class="audit-tag">● Gratis &amp; unverbindlich</span>
+      <h3>Noch nicht bereit für eine Anfrage?</h3>
+      <p>Schick uns deinen Insta- oder TikTok-Account — wir sagen dir in <strong style="color:#f5efe4;">60 Sekunden kostenlos</strong>, was wir an deinem Content ändern würden, damit mehr Gäste kommen. Ohne Haken, ohne Verpflichtung.</p>
+      <a href="https://wa.me/491758775258?text=Hallo!%20Ich%20h%C3%A4tte%20gern%20euren%20kostenlosen%20Content-Check.%20Mein%20Account%3A%20" target="_blank" rel="noopener" class="btn btn-gold-lg">Gratis Content-Check holen →</a>
+      <div class="audit-foot">Meist antworten wir noch am selben Tag.</div>
+    </div>
+  </div>
 </section>
 
 <!-- ÜBER UNS -->
@@ -1661,6 +1707,7 @@ section[id], #hero { scroll-margin-top: 90px; }
       <span class="tag">● Kontakt</span>
       <h2 style="margin-bottom:.5rem;">Lust auf <em>volle Tische?</em></h2>
       <p style="font-size:.83rem;">Schreib uns — unverbindlich &amp; kostenlos. Wir melden uns persönlich innerhalb von 24 Stunden.</p>
+      <div class="scarcity anim anim-delay-1"><span class="scarcity-dot"></span>Wir nehmen pro Monat nur 3 neue Läden in Münster</div>
       <div class="personal-note anim anim-delay-1" style="margin-top:1.6rem;">
         <div class="personal-note-photo">
           <img src="nebeneinander.jpg" alt="Fassie und Lion, deine Ansprechpartner" width="1122" height="1402" loading="lazy" decoding="async">
@@ -2016,6 +2063,20 @@ registerScroll(function() {
     if (waReady) waBtn.classList.remove('visible');
   }
 });
+
+/* ── PERSONALISIERTER LINK: ?to=name zeigt eine Begruessung im Hero ──
+   Fuer Kalt-Akquise: sowloynab.de/?to=trattoria-bella  ->  "Hey Trattoria Bella ..."
+   Eingabe wird gesaeubert und per textContent gesetzt (kein HTML -> kein XSS). */
+(function(){
+  var to = new URLSearchParams(location.search).get('to');
+  if (!to) return;
+  try { to = decodeURIComponent(to); } catch(e){}
+  to = to.replace(/[_+-]+/g, ' ').replace(/[^\p{L}\p{N} &.'’]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  if (!to) return;
+  to = to.replace(/\b\p{L}/gu, function(c){ return c.toUpperCase(); });
+  var hey = document.getElementById('hero-hey'), nm = document.getElementById('hero-hey-name');
+  if (hey && nm){ nm.textContent = to; hey.hidden = false; }
+})();
 
 /* Cookie-Banner entfernt: keine Analyse-/Tracking-Cookies -> keine Einwilligung noetig.
    Leere Platzhalter, falls irgendwo noch aufgerufen. */
