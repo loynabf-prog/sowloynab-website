@@ -2374,7 +2374,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
     var saves = (v.saves || '').trim();
     var likeBtn = likes
       ? '<button type="button" class="cp-act cp-like" aria-label="Gefällt mir" data-base="' + likes + '">' + HEART + '<span>' + likes + '</span></button>'
-      : '<button type="button" class="cp-act cp-like" aria-label="Gefällt mir" data-base="0">' + HEART + '<span></span></button>';
+      : ''; /* ohne echte Zahl kein leeres Herz — wirkt sonst halbfertig */
     var commentBtn = comments ? '<div class="cp-act">' + COMMENT + '<span>' + comments + '</span></div>' : '';
     var saveBtn = saves ? '<div class="cp-act">' + BOOKMARK + '<span>' + saves + '</span></div>' : '';
     /* Top-Kommentare als echte Reaktions-Chips (max. 2) */
