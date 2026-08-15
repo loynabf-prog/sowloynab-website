@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#100b09">
+<script>
+  /* Immer am Seitenanfang starten: der Browser springt sonst zu einem in der URL
+     haengengebliebenen Sektions-Hash (#quiz) und man landet unten im Kontaktformular.
+     Content-Phone-Trigger (#phone) und ?cp=1 bleiben erhalten. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  (function(){ var h = location.hash;
+    if (h && h !== '#phone') { try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} }
+  })();
+</script>
 <title>Social Media Agentur für Gastronomie in Münster | Sow & Loynab Media</title>
 <meta name="description" content="Social-Media-Agentur für Gastronomie in Münster: TikTok & Instagram, Dreh vor Ort, über 2 Mio. Views für unsere Kunden. Kostenlose, unverbindliche Anfrage — wir melden uns persönlich.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e0521a'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='26' font-weight='bold' fill='%23fff' text-anchor='middle'%3ES%26L%3C/text%3E%3C/svg%3E">
@@ -2760,7 +2769,7 @@ var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-mo
       var t = document.getElementById('quiz'); if (!t) return;
       var y = t.getBoundingClientRect().top + (window.pageYOffset || 0) - 64;
       window.scrollTo({ top: Math.max(0, y), behavior: prefersReduced ? 'auto' : 'smooth' });
-      if (history.pushState) history.pushState(null, '', '#quiz');
+      /* KEIN #quiz in die URL schreiben — sonst landet der naechste Seitenaufruf unten. */
     }, delay);
   }
   if (cpxClose) cpxClose.addEventListener('click', closeApp);
